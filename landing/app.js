@@ -269,14 +269,14 @@
       : [];
     const todo = [...all.filter((x) => !x.done), ...extra, { ...DRILL, done: false }, ...all.filter((x) => x.done)];
 
-    const kitText = `کیت ادامه‌ی من — امتیاز آمادگی: ${fa(score)} از ۱۰۰\n` +
+    const kitText = `بسته‌ی مخصوص من — امتیاز آمادگی: ${fa(score)} از ۱۰۰\n` +
       todo.map((x, i) => `${x.done ? '✓' : '☐'} ${fa(i + 1)}. ${x.t} — ${x.d}`).join('\n') +
       `\n\n#ادامه_دارد · اینترنت ممکنه قطع بشه، مسیرت نه.`;
 
     stage.innerHTML = `
       <div class="result-top">
         <div class="ring" style="--p:${motion ? 0 : score};--c:${level.c}"><b>${fa(motion ? 0 : score)}</b></div>
-        <div><div class="q-count">کیت ادامه‌ی ${BIZ[biz].name}</div><h3>${level.h}</h3><p>${level.p}</p></div>
+        <div><div class="q-count">بسته‌ی مخصوص ${BIZ[biz].name}</div><h3>${level.h}</h3><p>${level.p}</p></div>
       </div>
       <div class="kit">
         ${todo.map((x, i) => `
@@ -288,7 +288,7 @@
       </div>
       <div class="result-actions">
         <a class="btn" href="${L.auth}" data-track="quiz_result_${score}">ثبت‌نام و شروع روی لیارا</a>
-        <button class="btn btn-ghost" id="copy-kit">کپی کیت ادامه</button>
+        <button class="btn btn-ghost" id="copy-kit">کپی بسته</button>
         <button class="btn btn-ghost" id="restart">دوباره</button>
       </div>
       <p class="disclaimer">این امتیاز یک خودارزیابی سریعه؛ ارزیابی تخصصی یا تضمین دسترس‌پذیری نیست. سناریوی واقعی کارت رو حتماً تست کن.</p>`;
