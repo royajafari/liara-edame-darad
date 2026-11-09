@@ -23,14 +23,21 @@
   .st { width: 150px; left: 455px; top: 270px; z-index: 3; transform: rotate(3deg); }
   .line { position: absolute; left: 0; right: 0; bottom: 46px; height: 4px; background: linear-gradient(90deg, var(--amber) 0 30%, var(--teal) 30%); }
   .line::before { content: ""; position: absolute; left: 30%; top: -8px; width: 20px; height: 20px; border-radius: 50%; background: var(--teal); box-shadow: var(--glow); transform: translateX(-50%); }
+  /* Metallic frames: gold (main), silver, teal, rose gold */
+  .deck .card { position: absolute; padding: 6px; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,.55), var(--halo); }
+  .deck .card img { position: static; display: block; width: 100%; border-radius: 14px; border: 0; box-shadow: none; transform: none; }
+  .gold   { background: linear-gradient(135deg,#8C6A1F,#F6D27A 25%,#B8862B 50%,#FCE7A6 72%,#9A7425); --halo: 0 0 40px rgba(246,185,76,.35); }
+  .silver { background: linear-gradient(135deg,#6E7787,#EEF1F6 25%,#9AA3B2 50%,#F7F9FC 72%,#7C8594); --halo: 0 0 36px rgba(220,228,240,.22); }
+  .teal   { background: linear-gradient(135deg,#0B6F64,#7FEADF 28%,#13B8A6 55%,#B5F5EE 75%,#0E8578); --halo: 0 0 40px rgba(19,184,166,.35); }
+  .rose   { background: linear-gradient(135deg,#7A4A3A,#F4C2AE 28%,#B9705A 55%,#F9DACD 75%,#8A5644); --halo: 0 0 36px rgba(242,184,160,.3); }
 </style>
 </head>
 <body>
   <div class="deck">
-    <img class="s1" src="../carousel/export/slide-01.png" alt="">
-    <img class="s2" src="../carousel/export/slide-04.png" alt="">
-    <img class="s3" src="../carousel/export/slide-03.png" alt="">
-    <img class="st" src="../highlights/export/story-s4-1.png" alt="">
+    <div class="card s1 silver"><img src="../carousel/export/slide-01.png" alt=""></div>
+    <div class="card s2 teal"><img src="../carousel/export/slide-04.png" alt=""></div>
+    <div class="card s3 gold"><img src="../carousel/export/slide-03.png" alt=""></div>
+    <div class="card st rose"><img src="../highlights/export/story-s4-1.png" alt=""></div>
   </div>
   <div class="copy">
     <div class="k">کمپین بازاریابی و فروش برای لیارا</div>
