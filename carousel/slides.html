@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>کاروسل — ادامه دارد…</title>
+<link rel="stylesheet" href="../assets/campaign.css">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: #050914; font-family: var(--font); color: var(--ice); }
+  body.single { width: 1080px; height: 1350px; overflow: hidden; }
+  body.all { display: grid; gap: 24px; padding: 24px; justify-content: center; }
+  .slide { width: 1080px; height: 1350px; position: relative; overflow: hidden; background: var(--navy); padding: 96px 90px 0; }
+  .slide.grid-bg { background-image: radial-gradient(rgba(138,151,181,.16) 2px, transparent 2.2px); background-size: 40px 40px; }
+  .slide::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(900px 600px at 85% 0%, rgba(19,184,166,.10), transparent 60%); }
+  .slide.alarm::after { background: radial-gradient(900px 600px at 85% 0%, rgba(246,185,76,.10), transparent 60%); }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 26px; color: var(--teal); }
+  .alarm .eyebrow { color: var(--amber); }
+  .eyebrow::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: currentColor; box-shadow: 0 0 16px currentColor; }
+  h1 { font-weight: 900; font-size: 88px; line-height: 1.35; margin-top: 28px; }
+  h1 em { font-style: normal; color: var(--teal); }
+  .alarm h1 em { color: var(--amber); }
+  h2 { font-weight: 900; font-size: 68px; line-height: 1.4; margin-top: 24px; }
+  h2 em { font-style: normal; color: var(--teal); }
+  .alarm h2 em { color: var(--amber); }
+  p.body { font-size: 34px; line-height: 1.85; color: #C9D2E6; margin-top: 28px; max-width: 880px; }
+  b.t { color: var(--ice); }
+
+  .term { margin-top: 56px; background: #070C19; border: 1px solid var(--navy-600); border-radius: 22px; overflow: hidden; direction: ltr; text-align: left; box-shadow: 0 30px 80px rgba(0,0,0,.35); position: relative; z-index: 1; }
+  .term .bar { height: 54px; background: #0E1630; display: flex; align-items: center; gap: 12px; padding: 0 22px; }
+  .term .bar i { width: 16px; height: 16px; border-radius: 50%; background: #2A3557; }
+  .term pre { font-family: var(--mono); font-size: 27px; line-height: 1.8; padding: 26px 30px 30px; white-space: pre-wrap; word-break: break-all; }
+  .p { color: var(--muted); } .e { color: var(--red); } .w { color: var(--amber); } .ok { color: var(--teal); }
+  .cursor { display: inline-block; width: 16px; height: 32px; background: var(--ice); vertical-align: -5px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; direction: ltr; justify-content: flex-end; position: relative; z-index: 1; }
+  .chip { font-family: var(--mono); font-size: 27px; padding: 12px 22px; border-radius: 999px; border: 1.5px solid var(--teal); color: var(--teal-300); background: rgba(19,184,166,.08); }
+
+  .list { margin-top: 44px; display: grid; gap: 18px; position: relative; z-index: 1; }
+  .row { display: flex; gap: 22px; align-items: center; background: var(--navy-700); border: 1px solid var(--navy-600); border-radius: 20px; padding: 22px 28px; font-size: 32px; font-weight: 500; }
+  .row .ic { flex: 0 0 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-weight: 900; font-size: 28px; }
+  .row small { display: block; color: var(--muted); font-size: 24px; font-weight: 400; margin-top: 2px; }
+  .row.bad { border-style: dashed; border-color: rgba(246,185,76,.5); }
+  .row.bad .ic { background: rgba(246,185,76,.12); color: var(--amber); }
+  .row.good .ic { background: rgba(19,184,166,.14); color: var(--teal); }
+  .num { font-family: var(--font); }
+
+  .big-logo { width: 860px; display: block; margin: 70px 0 0; }
+
+  /* Footer: every slide ends like an episode */
+  .foot { position: absolute; left: 90px; right: 90px; bottom: 64px; display: flex; justify-content: space-between; align-items: center; font-size: 26px; color: var(--muted); z-index: 2; }
+  .foot .cont { display: flex; align-items: center; gap: 14px; font-weight: 800; color: var(--ice); }
+  .foot .cont .dots { font-size: 54px; }
+  .foot .brand { font-weight: 900; color: var(--ice); letter-spacing: 0; }
+  .foot .brand span { color: var(--muted); font-weight: 500; margin-inline-start: 14px; }
+
+  .lat { font-family: "Segoe UI", Arial, sans-serif; }
+  .steps { display: flex; gap: 16px; margin-top: 40px; position: relative; z-index: 1; }
+  .steps span { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 800; padding: 16px 28px 16px 22px; border-radius: 999px; background: var(--navy-700); border: 1px solid var(--navy-600); }
+  .steps b { width: 46px; height: 46px; border-radius: 50%; background: var(--teal); color: var(--navy-900); display: grid; place-items: center; font-size: 26px; }
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; position: relative; z-index: 1; }
+  .trio div { background: var(--navy-700); border: 1px solid var(--navy-600); border-top: 4px solid var(--teal); border-radius: 20px; padding: 26px 24px; }
+  .trio b { display: block; font-size: 30px; font-weight: 800; }
+  .trio span { display: block; color: var(--muted); font-size: 24px; line-height: 1.7; margin-top: 8px; }
+  .cta { display: inline-flex; align-items: center; gap: 22px; margin-top: 56px; background: var(--teal); color: var(--navy-900); font-weight: 900; font-size: 40px; padding: 26px 44px; border-radius: 999px; box-shadow: 0 0 60px rgba(19,184,166,.45); position: relative; z-index: 1; }
+  .cta span { font-weight: 700; font-size: 30px; opacity: .8; }
+  .tag { margin-top: 30px; color: var(--muted); font-size: 30px; font-weight: 700; }
+  .dots.all-on i { background: var(--teal); box-shadow: var(--glow); }
+
+  /* The line that runs through the whole carousel */
+  svg.thread { position: absolute; left: 0; right: 0; bottom: 150px; width: 1080px; height: 120px; z-index: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const T = { amber: '#F6B94C', teal: '#13B8A6' };
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+// Thread: one continuous path across slides. state: 'broken' | 'turn' | 'on'
+function thread(state) {
+  const y = 60;
+  if (state === 'broken') return `<svg class="thread" viewBox="0 0 1080 120"><path d="M0 ${y} H1080" stroke="${T.amber}" stroke-width="5" stroke-dasharray="26 22" stroke-linecap="round" opacity=".75"/><circle cx="540" cy="${y}" r="9" fill="${T.amber}"/></svg>`;
+  if (state === 'turn') return `<svg class="thread" viewBox="0 0 1080 120"><path d="M0 ${y} H470" stroke="${T.amber}" stroke-width="5" stroke-dasharray="26 22" stroke-linecap="round" opacity=".75"/><circle cx="540" cy="${y}" r="22" fill="${T.teal}" opacity=".35"/><circle cx="540" cy="${y}" r="12" fill="${T.teal}"/><path d="M560 ${y} H1080" stroke="${T.teal}" stroke-width="6" stroke-linecap="round"/></svg>`;
+  return `<svg class="thread" viewBox="0 0 1080 120"><path d="M0 ${y} H1080" stroke="${T.teal}" stroke-width="6"/><circle cx="540" cy="${y}" r="10" fill="${T.teal}"/></svg>`;
+}
+
+const S = [
+  { cls: 'alarm grid-bg', th: 'broken', html: `
+    <div class="eyebrow">ساعت ۹ صبح، روز قطعی</div>
+    <h1>اینترنت بین‌الملل<br>قطع شد.<br><em>کار تو چی؟</em></h1>
+    <div class="term"><div class="bar"><i></i><i></i><i></i></div><pre><span class="p">~/shop $</span> npm install
+<span class="e">npm ERR! code ETIMEDOUT</span>
+<span class="e">npm ERR! request to registry.npmjs.org failed</span>
+<span class="p">~/shop $</span> <span class="cursor"></span></pre></div>` },
+
+  { cls: 'alarm', th: 'broken', html: `
+    <div class="eyebrow">مسئله</div>
+    <h2>قطعی فقط یعنی<br>«سایت بالا نمیاد»؟ <em>نه.</em></h2>
+    <p class="body">گاهی یک وابستگی کوچیک خارجی، کل کار رو متوقف می‌کنه:</p>
+    <div class="list">
+      <div class="row bad"><span class="ic">!</span><div>پکیج‌ها و ایمیج‌ها<small>npm، pip، Docker Hub، Composer</small></div></div>
+      <div class="row bad"><span class="ic">!</span><div>سرور و دیتابیس خارج از ایران<small>سایت و داده‌ات پشت مرز می‌مونه</small></div></div>
+      <div class="row bad"><span class="ic">!</span><div>فونت، اسکریپت و CDN خارجی<small>صفحه نصفه‌نیمه باز می‌شه</small></div></div>
+      <div class="row bad"><span class="ic">!</span><div>APIهای خارجی و بکاپ بیرون<small>نقطه‌هایی که کسی یادش نیست</small></div></div>
+    </div>` },
+
+  { cls: 'grid-bg', th: 'turn', html: `
+    <div class="eyebrow">اما قصه همین‌جا تموم نمی‌شه</div>
+    <img class="big-logo" src="../brand/logo-dark.svg" alt="ادامه دارد…">
+    <h2 style="margin-top:56px">اینترنت ممکنه قطع بشه،<br><em>مسیرت نه.</em></h2>
+    <p class="body">«ادامه دارد…» کمپین لیاراست برای اینکه کار تو، حتی وسط قطعی، وسط قصه نمونه.</p>
+    <div class="steps"><span><b>۱</b>پکیج‌ها</span><span><b>۲</b>زیرساخت</span><span><b>۳</b>آمادگی</span></div>` },
+
+  { cls: '', th: 'on', html: `
+    <div class="eyebrow">قدم ۱ · میرورهای لیارا</div>
+    <h2>پکیج‌ها رو<br><em>بدون اینترنت بین‌الملل</em><br>نصب کن.</h2>
+    <div class="term"><div class="bar"><i></i><i></i><i></i></div><pre><span class="p">$</span> npm config set registry \\
+  https://package-mirror.liara.ir/repository/npm/ \\
+  --global
+<span class="p">$</span> npm install
+<span class="ok">✓ added 312 packages</span></pre></div>
+    <div class="chips"><span class="chip">npm</span><span class="chip">PyPI</span><span class="chip">Docker Hub</span><span class="chip">Composer</span><span class="chip">Go</span><span class="chip">NuGet</span><span class="chip">GitHub</span><span class="chip">Ubuntu · Debian · Alpine</span></div>` },
+
+  { cls: 'grid-bg', th: 'on', html: `
+    <div class="eyebrow">قدم ۲ · زیرساخت داخل ایران</div>
+    <h2>کد، داده و فایل‌هات<br><em>کنار هم، داخل ایران.</em></h2>
+    <div class="list">
+      <div class="row good"><span class="ic">۱</span><div>پلتفرم (PaaS)<small>استقرار Node، PHP، Python، Go، .NET و Docker</small></div></div>
+      <div class="row good"><span class="ic">۲</span><div>دیتابیس ابری<small>MySQL، PostgreSQL، MongoDB، Redis و…</small></div></div>
+      <div class="row good"><span class="ic">۳</span><div>ذخیره‌سازی ابری<small>سازگار با <span class="lat">S3</span> برای فایل‌ها و رسانه‌ها</small></div></div>
+      <div class="row good"><span class="ic">۴</span><div>سرور مجازی ابری<small>همه‌ی پلن‌ها با موقعیت ایران</small></div></div>
+    </div>` },
+
+  { cls: '', th: 'on', html: `
+    <div class="eyebrow">قدم ۳ · آمادگی</div>
+    <h2>آمادگی یعنی<br><em>قبل از قطعی</em> تمرین کنی.</h2>
+    <div class="list">
+      <div class="row good"><span class="ic">↺</span><div>بکاپ رایگان<small>تا ۱۰ برابر فضای پلن، داخل لیارا</small></div></div>
+      <div class="row good"><span class="ic">@</span><div>DNS رایگان و ایمیل SMTP<small>دامنه و ایمیل‌های سیستمی‌ات هم کنار بقیه</small></div></div>
+      <div class="row good"><span class="ic">⏱</span><div>پرداخت ساعتی<small>یه محیط آزمایشی بساز، تست کن، خاموشش کن</small></div></div>
+    </div>
+    <p class="body">یه روز رو به «تمرین قطعی» اختصاص بده و ببین کجای کار می‌لنگه.</p>` },
+
+  { cls: 'grid-bg', th: 'on', html: `
+    <div class="eyebrow">ذخیره کن 🔖</div>
+    <h2>چک‌لیست <em>قبل از قطعی بعدی</em></h2>
+    <div class="list">
+      <div class="row good"><span class="ic">۱</span><div>رجیستری npm / pip رو روی میرور ایرانی بذار</div></div>
+      <div class="row good"><span class="ic">۲</span><div>registry-mirrors داکر رو تنظیم کن</div></div>
+      <div class="row good"><span class="ic">۳</span><div>فونت و اسکریپت‌ها رو روی سرور خودت بیار</div></div>
+      <div class="row good"><span class="ic">۴</span><div>دیتابیس و فایل‌ها رو کنار اپ ببر</div></div>
+      <div class="row good"><span class="ic">۵</span><div>بکاپ بگیر و یک بار بازیابی‌اش رو تست کن</div></div>
+      <div class="row good"><span class="ic">۶</span><div>APIهای خارجی رو لیست کن و جایگزین بچین</div></div>
+    </div>` },
+
+  { cls: '', th: 'on', html: `
+    <div class="eyebrow">روزهای سخت</div>
+    <h2>تو روزهای سخت،<br><em>تنها نیستی.</em></h2>
+    <p class="body">بیش از <b class="t">۲۰۰ هزار توسعه‌دهنده</b> روی لیارا کار می‌کنن. مستندات فارسی، آموزش ویدیویی و تیمی که شبانه‌روز حواسش به سرویس‌هاست.</p>
+    <p class="body">قطعی قابل پیش‌بینی نیست؛ <b class="t">آمادگی هست.</b> ما کنارتیم که این آمادگی رو از امروز بسازی.</p>
+    <div class="trio">
+      <div><b>مستندات فارسی</b><span>راهنمای قدم‌به‌قدم میرورها و استقرار</span></div>
+      <div><b>آموزش ویدیویی</b><span>از اولین دیپلوی تا بکاپ و بازیابی</span></div>
+      <div><b>پایش شبانه‌روزی</b><span>تیمی که شبانه‌روز مراقب سرویس‌هاست</span></div>
+    </div>` },
+
+  { cls: 'grid-bg', th: 'on', last: true, html: `
+    <div class="eyebrow">قسمت بعدی رو تو می‌نویسی</div>
+    <h1>کارت چقدر<br>برای قطعی<br><em>آماده‌ست؟</em></h1>
+    <p class="body">تست آمادگی ۲ دقیقه‌ای رو بزن، کیت ادامه‌ی مخصوص کارت رو بگیر و با چند کلیک روی لیارا مستقر شو.</p>
+    <div class="cta">شروع تست آمادگی <span>← لینک در بیو</span></div>
+    <p class="tag">#ادامه_دارد</p>` },
+];
+
+const params = new URLSearchParams(location.search);
+const only = params.get('s');
+const total = S.length;
+const html = S.map((s, i) => {
+  if (only && +only !== i + 1) return '';
+  const foot = s.last
+    ? `<div class="foot"><span class="brand">لیارا<span>liara.ir</span></span><span class="cont">ادامه‌اش با تو <span class="dots all-on"><i></i><i></i><i></i></span></span></div>`
+    : `<div class="foot"><span class="brand">لیارا<span>${fa(i+1)}/${fa(total)}</span></span><span class="cont">ادامه دارد <span class="dots"><i></i><i></i><i></i></span></span></div>`;
+  return `<section class="slide ${s.cls}">${thread(s.th)}${s.html}${foot}</section>`;
+}).join('');
+document.getElementById('root').innerHTML = html;
+document.body.className = only ? 'single' : 'all';
+</script>
+</body>
+</html>

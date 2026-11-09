@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ادامه دارد… | اینترنت ممکنه قطع بشه، مسیرت نه — کمپین لیارا</title>
+<meta name="description" content="کار تو حتی وسط قطعی اینترنت بین‌الملل هم می‌تونه ادامه پیدا کنه: میرورهای ایرانی، زیرساخت داخل ایران و یک تست آمادگی ۲ دقیقه‌ای.">
+<meta property="og:title" content="ادامه دارد… — اینترنت ممکنه قطع بشه، مسیرت نه.">
+<meta property="og:description" content="تست آمادگی ۲ دقیقه‌ای و کیت ادامه‌ی مخصوص کار تو، با راهکارهای لیارا.">
+<meta property="og:image" content="../linkedin/linkedin-cover.png">
+<meta name="theme-color" content="#141D35">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/campaign.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#quiz">رفتن به تست آمادگی</a>
+
+<header class="nav">
+  <div class="container nav-in">
+    <a href="#top" class="nav-logo" aria-label="ادامه دارد…"><img src="../brand/logo-dark.svg" alt="ادامه دارد…" width="150" height="57"></a>
+    <nav class="nav-links" aria-label="بخش‌ها">
+      <a href="#recap">مسئله</a>
+      <a href="#solutions">راهکارها</a>
+      <a href="#business">کسب‌وکار تو</a>
+      <a href="#faq">سؤال‌ها</a>
+    </nav>
+    <a href="#quiz" class="btn btn-sm" data-track="nav_quiz">تست آمادگی</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero grid-bg">
+    <div class="container hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow">کمپین لیارا · ادامه دارد <span class="dots"><i></i><i></i><i></i></span></p>
+        <h1>اینترنت ممکنه قطع بشه،<br><em>مسیرت نه.</em></h1>
+        <p class="lead">قطعی بعدی رو نمی‌شه پیش‌بینی کرد؛ آمادگی رو می‌شه. با میرورهای ایرانی، زیرساخت داخل ایران و یک تست ۲ دقیقه‌ای، بفهم کار تو کجا گیر می‌کنه و چطور ادامه پیدا می‌کنه.</p>
+        <div class="hero-cta">
+          <a href="#quiz" class="btn" data-track="hero_quiz">تست آمادگی ۲ دقیقه‌ای</a>
+          <a href="#solutions" class="btn btn-ghost" data-track="hero_solutions">دیدن راهکارها</a>
+        </div>
+        <div class="proof" id="proof" role="status">
+          <span class="proof-dot"></span>
+          <span>این صفحه <b id="ext-count">صفر</b> درخواست به سرورهای خارجی داره؛ فونت، تصویر و اسکریپت همه از همین سرور میان.</span>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="term term-hero">
+          <div class="bar"><i></i><i></i><i></i><span>~/shop</span></div>
+          <pre id="typer"></pre>
+        </div>
+        <svg class="thread" viewBox="0 0 600 80" preserveAspectRatio="none">
+          <path class="thread-broken" d="M0 40 H280" />
+          <circle class="thread-node" cx="300" cy="40" r="10"/>
+          <path class="thread-on" d="M320 40 H600" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECAP: the problem, framed like a TV series -->
+  <section id="recap" class="section">
+    <div class="container">
+      <p class="eyebrow alarm">در قسمت قبل…</p>
+      <h2>قطعی فقط یعنی «سایت بالا نمیاد»؟ <em class="amber">نه.</em></h2>
+      <p class="section-lead">تو قطعی‌های اخیر خیلی از تیم‌ها فهمیدن مشکل فقط سرور نیست؛ یه وابستگی کوچیکِ خارجی کافیه تا کل کار بخوابه.</p>
+      <div class="recap-grid">
+        <article class="recap-card"><span class="ic">!</span><h3>پکیج و ایمیج</h3><p><code>npm install</code>، <code>pip install</code> و <code>docker pull</code> به مخزن‌های خارجی وصل‌ان.</p></article>
+        <article class="recap-card"><span class="ic">!</span><h3>سرور و دیتابیس بیرون</h3><p>اپ یا داده‌ات پشت مرزه و کاربر داخلی بهش نمی‌رسه.</p></article>
+        <article class="recap-card"><span class="ic">!</span><h3>فونت، اسکریپت، CDN</h3><p>صفحه نصفه باز می‌شه یا اصلاً رندر نمی‌شه.</p></article>
+        <article class="recap-card"><span class="ic">!</span><h3>API و بکاپ خارجی</h3><p>نقشه، لاگین، هوش مصنوعی، ایمیل یا بکاپی که دیگه در دسترس نیست.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTIONS -->
+  <section id="solutions" class="section section-alt">
+    <div class="container">
+      <p class="eyebrow">اما قصه همین‌جا تموم نمی‌شه</p>
+      <h2>سه قدم تا <em>ادامه</em></h2>
+
+      <div class="step-block">
+        <div class="step-head"><span class="step-n">۱</span><div><h3>پکیج‌ها، بدون اینترنت بین‌الملل</h3><p>میرورهای لیارا نسخه‌ی کش‌شده‌ی مخزن‌های اصلی‌ان، داخل ایران. یه خط تنظیم، و نصب ادامه داره.</p></div></div>
+        <div class="tabs" role="tablist" aria-label="دستور میرور">
+          <button role="tab" aria-selected="true" data-tab="npm">npm</button>
+          <button role="tab" aria-selected="false" data-tab="pip">pip</button>
+          <button role="tab" aria-selected="false" data-tab="docker">Docker</button>
+        </div>
+        <div class="term term-code">
+          <div class="bar"><i></i><i></i><i></i><span id="code-title">terminal</span><button class="copy" id="copy-btn" data-track="copy_command">کپی</button></div>
+          <pre id="code-box"></pre>
+        </div>
+        <ul class="chips" aria-label="مخزن‌های پشتیبانی‌شده"><li>npm</li><li>PyPI</li><li>Docker Hub</li><li>Composer</li><li>Go</li><li>NuGet</li><li>GitHub</li><li>Ubuntu</li><li>Debian</li><li>Alpine</li><li>Fedora</li><li>Arch</li></ul>
+        <a class="link-more" href="https://liara.ir/mirrors/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_mirrors">راهنمای کامل میرورها ←</a>
+      </div>
+
+      <div class="step-block">
+        <div class="step-head"><span class="step-n">۲</span><div><h3>کد، داده و فایل‌هات، کنار هم داخل ایران</h3><p>هرچی اپ برای اجرا لازم داره، روی دیتاسنترهای داخل ایران.</p></div></div>
+        <div class="cards4">
+          <article class="pcard"><h4>پلتفرم (PaaS)</h4><p>استقرار Node، PHP، Python، Go، .NET و Docker با آپلود سورس؛ کمتر از ۵ دقیقه.</p></article>
+          <article class="pcard"><h4>دیتابیس ابری</h4><p>MySQL، PostgreSQL، MongoDB، Redis، SQL Server و…، کنار اپ.</p></article>
+          <article class="pcard"><h4>ذخیره‌سازی ابری</h4><p>آبجکت استوریج سازگار با <span class="lat">S3</span> برای فایل‌ها و رسانه‌ها.</p></article>
+          <article class="pcard"><h4>سرور مجازی ابری</h4><p>کنترل کامل روی محیط؛ همه‌ی پلن‌ها با موقعیت ایران.</p></article>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-head"><span class="step-n">۳</span><div><h3>آمادگی یعنی قبل از قطعی تمرین کنی</h3><p>یه روز رو «تمرین قطعی» بذار: اینترنت بین‌الملل رو فرضاً ببند و ببین کجای کار می‌لنگه.</p></div></div>
+        <div class="cards4">
+          <article class="pcard"><h4>بکاپ رایگان</h4><p>تا ۱۰ برابر فضای پلن، داخل لیارا. یه بار هم بازیابی رو تست کن.</p></article>
+          <article class="pcard"><h4>DNS رایگان</h4><p>مدیریت دامنه کنار بقیه‌ی سرویس‌ها.</p></article>
+          <article class="pcard"><h4>ایمیل SMTP</h4><p>ایمیل‌های سیستمی اپ (تأیید، فاکتور) از زیرساخت داخلی.</p></article>
+          <article class="pcard"><h4>پرداخت ساعتی</h4><p>محیط آزمایشی بساز، تست کن، خاموشش کن؛ فقط به اندازه‌ی مصرف.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSINESS TYPE -->
+  <section id="business" class="section">
+    <div class="container">
+      <p class="eyebrow">قصه‌ی هر کسی فرق داره</p>
+      <h2>کار تو <em>چیه؟</em></h2>
+      <div class="biz-pick" role="tablist" aria-label="نوع کسب‌وکار">
+        <button role="tab" aria-selected="true" data-biz="shop">🛒 فروشگاه اینترنتی</button>
+        <button role="tab" aria-selected="false" data-biz="api">⚙️ وب‌اپ و API</button>
+        <button role="tab" aria-selected="false" data-biz="org">🏢 سامانه‌ی سازمانی</button>
+      </div>
+      <div class="biz-panel" id="biz-panel" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="section section-alt grid-bg">
+    <div class="container narrow">
+      <p class="eyebrow">تست آمادگی · ۵ سؤال · ۲ دقیقه</p>
+      <h2>کارت چقدر برای قطعی <em>آماده‌ست؟</em></h2>
+      <p class="section-lead">جواب بده تا «کیت ادامه»ی مخصوص کار خودت رو بگیری: کارهایی که باید انجام بدی و راهکاری که لیارا براش داره.</p>
+
+      <div class="quiz" id="quiz-box">
+        <div class="quiz-progress"><span id="q-bar"></span></div>
+        <div id="q-stage"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOT ALONE -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">روزهای سخت</p>
+      <h2>تو روزهای سخت، <em>تنها نیستی.</em></h2>
+      <div class="stats">
+        <div><b>۲۰۰٬۰۰۰+</b><span>توسعه‌دهنده و کسب‌وکار روی لیارا</span></div>
+        <div><b>۸ سال</b><span>تجربه‌ی زیرساخت ابری در ایران</span></div>
+        <div><b>۲۴/۷</b><span>پایش سرویس‌ها، شبانه‌روز</span></div>
+      </div>
+      <div class="cards4 three">
+        <article class="pcard"><h4>مستندات فارسی</h4><p>راهنمای قدم‌به‌قدم میرورها، استقرار، دیتابیس و بکاپ.</p><a href="https://docs.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_docs">مستندات ←</a></article>
+        <article class="pcard"><h4>آموزش ویدیویی</h4><p>از اولین دیپلوی تا مهاجرت دیتابیس.</p><a href="https://docs.liara.ir/tv/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_tv">ویدیوها ←</a></article>
+        <article class="pcard"><h4>پشتیبانی</h4><p>تیمی که کنارته تا آمادگی رو از امروز بسازی.</p><a href="https://console.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad&utm_content=support" target="_blank" rel="noopener" data-track="out_support">ورود به کنسول ←</a></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section section-alt">
+    <div class="container narrow">
+      <p class="eyebrow">صادقانه</p>
+      <h2>سؤال‌هایی که <em>باید پرسید</em></h2>
+      <div class="faq">
+        <details><summary>یعنی با لیارا سایتم تو قطعی ۱۰۰٪ بالا می‌مونه؟</summary><p>نه؛ هیچ زیرساختی به‌تنهایی چنین تضمینی نمی‌ده. دسترسی کاربرها، درگاه پرداخت، پیامک، APIهای خارجی و هر وابستگی دیگه باید جدا بررسی و تست بشه. کاری که لیارا می‌کنه اینه که هسته‌ی کار تو (اپ، دیتابیس، فایل‌ها و پکیج‌ها) داخل ایران باشه تا وابستگی‌ات به اینترنت بین‌الملل کم بشه.</p></details>
+        <details><summary>میرورها به‌روزن؟</summary><p>میرور لیارا یک Proxy Cache است که با مخزن اصلی همگام می‌شه و طبق اعلام لیارا تقریباً همیشه هم‌تراز با منبع اصلیه. پکیجی که قبلاً کش شده، حتی وقتی منبع اصلی در دسترس نیست هم قابل دانلوده.</p></details>
+        <details><summary>API هوش مصنوعی لیارا هم تو قطعی کار می‌کنه؟</summary><p>این سرویس به مدل‌های ارائه‌دهنده‌های مختلف وصله و ما در این کمپین درباره‌ی دسترس‌پذیری‌اش در قطعی وعده‌ای نمی‌دیم. اگه کارت به هوش مصنوعی وابسته‌ست، اون رو هم جزو وابستگی‌های خارجی‌ات بنویس و براش سناریوی جایگزین بچین.</p></details>
+        <details><summary>هزینه‌ی امتحان کردن چقدره؟</summary><p>لیارا پرداخت ساعتی داره؛ یعنی می‌تونی یه محیط آزمایشی بسازی، «تمرین قطعی» رو اجرا کنی و بعد خاموشش کنی. DNS رایگانه و بکاپ هم تا ۱۰ برابر فضای پلن رایگانه. قیمت‌های به‌روز در صفحه‌ی تعرفه‌های لیارا.</p></details>
+        <details><summary>برای مهاجرت از سرور خارجی از کجا شروع کنم؟</summary><p>از تست آمادگی همین صفحه شروع کن تا اولویت‌ها مشخص بشه. بعد اول پکیج‌ها رو روی میرور ببر (ریسک صفر)، بعد یک نسخه‌ی آزمایشی از اپ و دیتابیس رو روی لیارا بالا بیار و با داده‌ی تستی امتحانش کن.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section final grid-bg">
+    <div class="container final-in">
+      <img src="../brand/logo-dark.svg" alt="" class="final-logo" width="420" height="160">
+      <h2>قسمت بعدی رو <em>خودت بنویس.</em></h2>
+      <p class="section-lead">ثبت‌نام کن، اولین سرویس رو در کمتر از ۵ دقیقه بالا بیار و کار رو برای روزهای سخت آماده کن.</p>
+      <div class="hero-cta center">
+        <a class="btn" href="https://console.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad&utm_content=final" target="_blank" rel="noopener" data-track="cta_console_final">شروع روی لیارا</a>
+        <a class="btn btn-ghost" href="#quiz" data-track="final_quiz">اول تست آمادگی</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-in">
+    <span>ادامه دارد <span class="dots"><i></i><i></i><i></i></span></span>
+    <span class="muted">پروژه‌ی کلاسی «کمپین بازاریابی و فروش» برای چالش کمپین لیارا؛ این صفحه وب‌سایت رسمی لیارا نیست. اطلاعات خدمات از <a href="https://liara.ir/" target="_blank" rel="noopener">liara.ir</a>.</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

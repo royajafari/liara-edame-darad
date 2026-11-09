@@ -1,0 +1,39 @@
+/* ادامه دارد… — Liara campaign design tokens
+   No external dependencies: fonts are served locally. */
+
+@font-face { font-family: "Vazirmatn"; src: url("fonts/Vazirmatn-FD-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Vazirmatn"; src: url("fonts/Vazirmatn-FD-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Vazirmatn"; src: url("fonts/Vazirmatn-FD-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Vazirmatn"; src: url("fonts/Vazirmatn-FD-ExtraBold.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "Vazirmatn"; src: url("fonts/Vazirmatn-FD-Black.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+
+:root {
+  /* Core palette */
+  --navy-900: #0B1224;   /* deepest background */
+  --navy:     #141D35;   /* primary background — trust */
+  --navy-700: #1C2848;   /* cards / surfaces */
+  --navy-600: #24304F;   /* hairlines, borders */
+  --teal:     #13B8A6;   /* the continuing path — Liara, action */
+  --teal-300: #5FE0D1;   /* glow highlights */
+  --amber:    #F6B94C;   /* disruption, warnings, attention */
+  --ice:      #F4F7FB;   /* text, breathing space */
+  --muted:    #8A97B5;   /* secondary text */
+  --red:      #F06A6A;   /* terminal errors only */
+
+  --font: "Vazirmatn", Tahoma, sans-serif;
+  --mono: Consolas, "Cascadia Mono", "SFMono-Regular", Menlo, monospace;
+
+  --radius: 18px;
+  --glow: 0 0 24px rgba(19, 184, 166, .55);
+}
+
+/* The signature: three dots. Two dark (disconnected), the third lit (continues). */
+.dots { display: inline-flex; gap: .22em; align-items: center; direction: rtl; vertical-align: middle; }
+.dots i { width: .26em; height: .26em; border-radius: 50%; background: var(--navy-600); display: block; }
+.dots i:last-child { background: var(--teal); box-shadow: var(--glow); }
+
+/* Dotted network grid used as texture */
+.grid-bg {
+  background-image: radial-gradient(rgba(138, 151, 181, .18) 1.5px, transparent 1.6px);
+  background-size: 36px 36px;
+}
