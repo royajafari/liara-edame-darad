@@ -5,6 +5,13 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const fa = (n) => String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motion = document.documentElement.classList.contains('motion');
+  // Runs fn(eased 0→1) over ms milliseconds.
+  const tween = (ms, fn) => {
+    const t0 = performance.now();
+    const step = (t) => { const p = Math.min(1, (t - t0) / ms); fn(1 - Math.pow(1 - p, 3)); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
   /* Every outbound link is a gateway to a section of Liara. */
   const L = {
     auth: 'https://console.liara.ir/auth',
@@ -71,13 +78,18 @@
     ? `<span class="t-p">${prompt}</span>${esc(text)}`
     : `<span class="t-${cls}${/[؀-ۿ]/.test(text) ? ' t-fa' : ''}">${esc(text)}</span>`;
 
+  // The network diagram under the terminal follows the same story: flow → cut → wait → ok.
+  const phase = (p) => { visual.dataset.phase = p; };
   async function play() {
-    if (reduced) { typer.innerHTML = SCRIPT.map(line).join('\n'); visual.classList.add('ok'); return; }
+    if (reduced) { typer.innerHTML = SCRIPT.map(line).join('\n'); phase('ok'); return; }
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     for (;;) {
-      visual.classList.remove('ok');
+      phase('flow');
       let done = '';
       for (const l of SCRIPT) {
+        if (l[0] === 'e' && visual.dataset.phase === 'flow') { await sleep(1600); phase('cut'); }
+        if (l[0] === 'k') phase('wait');
+        if (l[0] === 'ok' && visual.dataset.phase !== 'ok') phase('ok');
         if (l[0] === 'p') {
           for (let i = 1; i <= l[2].length; i += 2) {
             typer.innerHTML = done + `<span class="t-p">${l[1]}</span>${esc(l[2].slice(0, i))}<span class="caret"></span>`;
@@ -90,7 +102,6 @@
           typer.innerHTML = done + '<span class="caret"></span>';
           await sleep(l[0] === 'k' ? 1300 : 550);
         }
-        if (l[2] === '✓ ادامه داره.') visual.classList.add('ok');
       }
       await sleep(4500);
     }
@@ -113,6 +124,7 @@
     g.dataset.track = 'mirror_guide_' + slug;
     g.textContent = `راهنمای میرور ${CMDS[k].label} در لیارا ←`;
     decorate(g.parentElement);
+    $$('.mflow .pkg text').forEach((t) => (t.textContent = { npm: 'npm', pip: 'pip', docker: 'image' }[k]));
   };
   $$('.tabs [data-tab]').forEach((b) => b.addEventListener('click', () => { showCmd(b.dataset.tab); track('tab', { id: b.dataset.tab }); }));
   showCmd('npm');
@@ -228,7 +240,7 @@
       <div class="q-count">سؤال ${fa(i + 1)} از ${fa(Q.length)}</div>
       <div class="q-title" id="q-title">${item.q}</div>
       <div class="q-opts" role="group" aria-labelledby="q-title">
-        ${item.o.map(([t], k) => `<button data-k="${k}">${t}</button>`).join('')}
+        ${item.o.map(([t], k) => `<button data-k="${k}" style="--i:${k}">${t}</button>`).join('')}
       </div>
       ${i > 0 ? '<button class="q-back">→ سؤال قبلی</button>' : ''}`;
     $$('.q-opts button', stage).forEach((b) => b.addEventListener('click', () => {
@@ -263,12 +275,12 @@
 
     stage.innerHTML = `
       <div class="result-top">
-        <div class="ring" style="--p:${score};--c:${level.c}"><b>${fa(score)}</b></div>
+        <div class="ring" style="--p:${motion ? 0 : score};--c:${level.c}"><b>${fa(motion ? 0 : score)}</b></div>
         <div><div class="q-count">کیت ادامه‌ی ${BIZ[biz].name}</div><h3>${level.h}</h3><p>${level.p}</p></div>
       </div>
       <div class="kit">
         ${todo.map((x, i) => `
-          <div class="kit-item ${x.done ? 'done' : ''}">
+          <div class="kit-item ${x.done ? 'done' : ''}" style="--i:${i}">
             <span class="n">${x.done ? '✓' : fa(i + 1)}</span>
             <div><b>${x.t}</b><p>${x.done ? 'این یکی رو داری؛ فقط مرتب تستش کن.' : x.d}</p>
             ${!x.done && x.a ? `<a href="${x.a}" data-track="kit_${i}">${x.al} ←</a>` : ''}</div>
@@ -281,6 +293,10 @@
       </div>
       <p class="disclaimer">این امتیاز یک خودارزیابی سریعه؛ ارزیابی تخصصی یا تضمین دسترس‌پذیری نیست. سناریوی واقعی کارت رو حتماً تست کن.</p>`;
     decorate(stage);
+    if (motion) { // ring fills from zero while the number counts up
+      const ring = $('.ring', stage);
+      tween(1200, (e) => { const v = Math.round(score * e); ring.style.setProperty('--p', v); ring.firstElementChild.textContent = fa(v); });
+    }
     $('#copy-kit').addEventListener('click', (e) => { copyText(kitText, e.currentTarget); track('kit_copy'); });
     $('#restart').addEventListener('click', () => { answers = []; renderQ(0); });
     track('quiz_complete', { score, biz });
@@ -289,4 +305,55 @@
   // Business choice also tailors the quiz result.
   renderQ(0);
   decorate();
+
+  /* ---------- Motion graphics (skipped entirely under reduced motion) ---------- */
+  if (motion) {
+    // Episode breaks: «ادامه دارد…» dots between sections.
+    $$('main > section:not(.hero)').forEach((s) => s.insertAdjacentHTML('afterbegin',
+      '<div class="ep-break" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span></div>'));
+
+    // Scroll reveal, staggered inside each group.
+    const groups = ['.section .eyebrow', '.section h2', '.section-lead', '.step-head', '.mflow', '.quiz', '.faq details'];
+    groups.forEach((sel) => $$(sel).forEach((el) => { if (!el.closest('.hero')) el.classList.add('rv'); }));
+    $$('.recap-grid, .cards4, .stats').forEach((g) => [...g.children].forEach((el, i) => { el.classList.add('rv'); el.style.setProperty('--i', i); }));
+    $$('.faq details').forEach((el, i) => el.style.setProperty('--i', i));
+
+    // Stats start at zero and count up when seen.
+    const stats = $$('.stats b[data-count]');
+    const fmt = (n) => fa(String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '٬'));
+    stats.forEach((b) => (b.textContent = fmt(0) + b.dataset.suffix));
+    const countUp = (b) => tween(1800, (e) => (b.textContent = fmt(Math.round(+b.dataset.count * e)) + b.dataset.suffix));
+
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      if (en.target.matches('.stats')) stats.forEach(countUp);
+      io.unobserve(en.target);
+    }), { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+    $$('.rv, .ep-break, .stats, .final-logo, .final').forEach((el) => io.observe(el));
+
+    // Loops pause while off-screen.
+    const pauser = new IntersectionObserver((entries) => entries.forEach((en) => en.target.classList.toggle('paused', !en.isIntersecting)));
+    $$('.hero-visual, .mflow, .nav-logo, .final-logo').forEach((el) => pauser.observe(el));
+
+    // Three steps: a line fills between step numbers as you scroll; each number lights when reached.
+    const nums = $$('#solutions .step-n');
+    const onScroll = () => {
+      const mark = innerHeight * 0.6;
+      const rects = nums.map((n) => n.getBoundingClientRect());
+      nums.forEach((n, i) => {
+        const r = rects[i];
+        const len = rects[i + 1] ? Math.max(0, rects[i + 1].top - r.top - 64) : 0;
+        n.style.setProperty('--len', `${len}px`);
+        n.classList.toggle('lit', r.top + 24 < mark);
+        n.style.setProperty('--fill', len ? Math.max(0, Math.min(1, (mark - r.bottom - 8) / len)).toFixed(3) : 0);
+      });
+    };
+    let raf = 0;
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; onScroll(); }); };
+    addEventListener('scroll', schedule, { passive: true });
+    addEventListener('resize', schedule);
+    addEventListener('load', schedule);
+    onScroll();
+  }
 })();

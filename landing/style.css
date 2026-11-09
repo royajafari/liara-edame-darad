@@ -21,7 +21,7 @@ code { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; white-sp
 /* Nav */
 .nav { position: sticky; top: 0; z-index: 50; background: rgba(20,29,53,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--navy-600); }
 .nav-in { display: flex; align-items: center; justify-content: space-between; height: 70px; gap: 20px; }
-.nav-logo img { display: block; height: 44px; width: auto; }
+.nav-logo svg { display: block; height: 44px; width: 170px; }
 .nav-links { display: flex; gap: 26px; }
 .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; }
 .nav-links a:hover { color: var(--ice); }
@@ -56,18 +56,44 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 .term .bar i { width: 12px; height: 12px; border-radius: 50%; background: #2A3557; }
 .term .bar span { margin-left: 8px; }
 .term pre { margin: 0; font-family: var(--mono); font-size: 15px; line-height: 1.8; padding: 18px 22px 22px; white-space: pre-wrap; word-break: break-all; min-height: 120px; }
-.term-hero pre { min-height: 260px; }
+.term-hero pre { min-height: 312px; } /* fits the full episode so the diagram below doesn't jump */
 .t-p { color: var(--muted); } .t-e { color: var(--red); } .t-ok { color: var(--teal); } .t-k { color: var(--amber); }
 .t-fa { font-family: var(--font); }
 .hero-in > *, .biz-panel > *, .step-block, .quiz { min-width: 0; }
 .caret { display: inline-block; width: 9px; height: 18px; background: var(--ice); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
-.thread { width: 100%; height: 60px; margin-top: 18px; }
-.thread-broken { stroke: var(--amber); stroke-width: 4; stroke-dasharray: 14 12; fill: none; opacity: .8; stroke-linecap: round; }
-.thread-on { stroke: var(--teal); stroke-width: 5; fill: none; stroke-dasharray: 280; stroke-dashoffset: 280; transition: stroke-dashoffset 1.2s ease; }
-.thread-node { fill: var(--amber); transition: fill .4s; }
-.hero-visual.ok .thread-on { stroke-dashoffset: 0; }
-.hero-visual.ok .thread-node { fill: var(--teal); filter: drop-shadow(0 0 8px var(--teal)); }
+/* Hero network: flow → cut → wait → ok (phase set by app.js in step with the terminal) */
+.net { display: block; width: 100%; height: auto; margin-top: 18px; overflow: visible; }
+.net .seg { stroke: #3A4A70; stroke-width: 3; fill: none; stroke-linecap: round; transition: stroke .3s; }
+.net .seg-on { stroke: var(--teal); stroke-width: 4; fill: none; stroke-linecap: round; stroke-dasharray: 202; stroke-dashoffset: 202; transition: stroke-dashoffset 1s ease; }
+.net .node { fill: var(--navy-700); stroke: var(--muted); stroke-width: 3; transition: fill .4s, stroke .4s; transform-box: fill-box; transform-origin: center; }
+.net .lb, .mflow .lb { font-family: var(--font); font-size: 15px; font-weight: 700; fill: var(--muted); text-anchor: middle; transition: fill .4s, opacity .4s; }
+.net .lb-mid { opacity: 0; }
+.cut-x path { stroke: var(--red); stroke-width: 3.5; stroke-linecap: round; fill: none; }
+.net .cut-x { opacity: 0; transition: opacity .2s; }
+.pk { fill: var(--ice); animation: pk-ext 2.4s linear infinite; animation-delay: var(--d, 0s); }
+.pk-in .pk { fill: var(--teal-300); animation-name: pk-in; animation-duration: 1.2s; }
+.pk-in { opacity: 0; transition: opacity .3s; }
+.pk-ext { transition: opacity .6s; }
+@keyframes pk-ext { 0% { transform: translateX(0); opacity: 0; } 10%, 85% { opacity: 1; } 100% { transform: translateX(432px); opacity: 0; } }
+@keyframes pk-in { 0% { transform: translateX(0); opacity: 0; } 15%, 80% { opacity: 1; } 100% { transform: translateX(202px); opacity: 0; } }
+.hero-visual:is([data-phase="cut"], [data-phase="wait"], [data-phase="ok"]) .seg-ext { stroke: var(--red); stroke-dasharray: 10 9; opacity: .75; }
+.hero-visual:is([data-phase="cut"], [data-phase="wait"], [data-phase="ok"]) .cut-x { opacity: 1; }
+.hero-visual:is([data-phase="cut"], [data-phase="wait"]) .pk-ext .pk { animation-play-state: paused; }
+.hero-visual:is([data-phase="cut"], [data-phase="wait"]) .pk-ext { opacity: .3; }
+.hero-visual[data-phase="cut"] .net { animation: shake .45s; }
+.hero-visual[data-phase="cut"] .term-hero { animation: alarm .7s; }
+.hero-visual[data-phase="wait"] .node-mid { stroke: var(--amber); animation: pulse 1s ease-in-out infinite; }
+.hero-visual[data-phase="ok"] .pk-ext { opacity: 0; }
+.hero-visual[data-phase="ok"] .pk-in { opacity: 1; }
+.hero-visual[data-phase="ok"] .seg-on { stroke-dashoffset: 0; }
+.hero-visual[data-phase="ok"] .node-mid, .hero-visual[data-phase="ok"] .node-you { fill: var(--teal); stroke: var(--teal-300); filter: drop-shadow(0 0 8px var(--teal)); }
+.hero-visual[data-phase="ok"] .lb-mid { opacity: 1; fill: var(--teal-300); }
+.hero-visual[data-phase="ok"] .lb-you { fill: var(--ice); }
+.hero-visual:not([data-phase]) .pk-ext, .hero-visual:not([data-phase]) .pk-in { opacity: 0; }
+@keyframes shake { 20% { transform: translateX(-6px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+@keyframes alarm { 0%, 100% { border-color: var(--navy-600); } 30% { border-color: var(--red); box-shadow: 0 0 0 3px rgba(240,106,106,.25), 0 30px 80px rgba(0,0,0,.35); } }
+@keyframes pulse { 50% { transform: scale(1.25); fill: rgba(246,185,76,.25); } }
 
 /* Sections */
 .section { padding: 96px 0; position: relative; }
@@ -149,7 +175,7 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 /* Final */
 .final { text-align: center; background-color: var(--navy-900); }
 .final-in { display: flex; flex-direction: column; align-items: center; }
-.final-logo { width: 340px; margin-bottom: 26px; }
+.final-logo { width: min(340px, 80vw); height: auto; margin-bottom: 26px; }
 .final .section-lead { margin-inline: auto; }
 
 .footer { border-top: 1px solid var(--navy-600); padding: 28px 0; font-size: 14px; }
@@ -171,11 +197,110 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
   .quiz { padding: 20px; }
   .term pre { font-size: 13px; }
 }
+/* ================= Motion =================
+   Everything below runs only with html.motion (set in <head> unless the visitor prefers reduced motion).
+   Without it the page is complete and static. */
+
+/* Mirror diagram (step 1) — static parts */
+.mflow { display: block; width: 100%; max-width: 620px; height: auto; margin: 0 0 20px; }
+.mf-ext { stroke: var(--red); stroke-width: 3; stroke-dasharray: 9 8; fill: none; opacity: .6; }
+.mf-in { stroke: var(--teal); stroke-width: 3; fill: none; }
+.mf-node circle, .mf-node rect { fill: var(--navy-700); stroke-width: 3; }
+.mf-node path { stroke-width: 2.5; fill: none; stroke-linecap: round; }
+.mf-ext-n circle, .mf-ext-n path { stroke: #3A4A70; }
+.mf-mirror rect, .mf-you rect { stroke: var(--teal); } .mf-mirror path, .mf-you path { stroke: var(--teal-300); }
+.mflow .lb-off { fill: var(--red); opacity: .8; } .mflow .lb-on { fill: var(--teal-300); }
+.pkg rect { fill: rgba(19,184,166,.18); stroke: var(--teal); stroke-width: 1.5; }
+.pkg text { font-family: var(--mono); font-size: 12px; font-weight: 700; fill: var(--ice); text-anchor: middle; }
+.pkg + .pkg { display: none; }
+.mflow { overflow: visible; }
+@media (max-width: 560px) { .net .lb, .mflow .lb { font-size: 21px; } .pkg text { font-size: 14px; } }
+.motion .pkg + .pkg { display: inline; }
+.motion .pkg { animation: pkg 2.6s linear infinite; animation-delay: var(--d, 0s); }
+@keyframes pkg { 0% { transform: translateX(0); opacity: 0; } 12%, 82% { opacity: 1; } 100% { transform: translateX(118px); opacity: 0; } }
+.motion .mflow .cut-x { animation: blink-x 1.6s ease-in-out infinite; }
+@keyframes blink-x { 50% { opacity: .35; } }
+
+/* Pause loops that are off-screen */
+.paused, .paused * { animation-play-state: paused !important; }
+
+/* Hero entrance */
+.motion .hero-copy > * { animation: rise .8s cubic-bezier(.2,.8,.2,1) both; }
+.motion .hero-copy > :nth-child(2) { animation-delay: .08s; } .motion .hero-copy > :nth-child(3) { animation-delay: .16s; }
+.motion .hero-copy > :nth-child(4) { animation-delay: .24s; } .motion .hero-copy > :nth-child(5) { animation-delay: .32s; }
+.motion .hero-visual { animation: rise 1s .2s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+/* Scroll reveal */
+.motion .rv { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i, 0) * 90ms); }
+.motion .rv.in { opacity: 1; transform: none; }
+
+/* «در قسمت قبل…»: cards switch on like an old TV */
+.recap-card { position: relative; overflow: hidden; }
+.recap-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: repeating-linear-gradient(0deg, rgba(244,247,251,.09) 0 1px, transparent 1px 3px), linear-gradient(90deg, rgba(240,106,106,.08), rgba(19,184,166,.08)); }
+.motion .recap-card.rv { transform: none; transition: none; }
+.motion .recap-card.rv.in { animation: tv-on .75s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 140ms); }
+.motion .recap-card.in::after { animation: static 1s steps(5) both; animation-delay: calc(var(--i, 0) * 140ms); }
+@keyframes tv-on { 0% { opacity: 0; transform: scale(1, .02); filter: brightness(3); } 30% { opacity: 1; transform: scale(1, .03); filter: brightness(3); } 60% { transform: scale(1, 1.03); filter: brightness(1.5); } 100% { opacity: 1; transform: none; filter: none; } }
+@keyframes static { 0% { opacity: 1; transform: translateY(0); } 40% { opacity: .8; transform: translateY(2px); } 70% { opacity: .5; transform: translateY(-1px); } 100% { opacity: 0; } }
+.motion #recap .eyebrow.in { animation: flicker 1.4s steps(1) both; }
+@keyframes flicker { 0%, 12%, 26% { opacity: 0; } 6%, 18%, 34%, 100% { opacity: 1; } }
+.motion .recap-card.in .ic { animation: warn 2.4s 1.2s ease-in-out infinite; }
+@keyframes warn { 50% { background: rgba(246,185,76,.32); } }
+
+/* Episode breaks between sections: the dots light one by one; only the last stays on */
+.ep-break { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 4px 16px; border-radius: 999px; background: var(--navy); border: 1px solid var(--navy-600); font-size: 22px; line-height: 1; }
+.motion .ep-break i { background: var(--navy-600); box-shadow: none; }
+.motion .ep-break.in i { animation: dot-try .9s ease both; }
+.motion .ep-break.in i:nth-child(2) { animation-delay: .3s; }
+.motion .ep-break.in i:last-child { animation: dot-on .5s .6s ease both, breathe 2.6s 1.2s ease-in-out infinite; }
+@keyframes dot-try { 0% { background: var(--navy-600); } 35% { background: var(--teal); box-shadow: var(--glow); } 100% { background: var(--navy-600); box-shadow: none; } }
+@keyframes dot-on { to { background: var(--teal); box-shadow: var(--glow); } }
+@keyframes breathe { 0%, 100% { background: var(--teal); box-shadow: 0 0 6px rgba(19,184,166,.5); } 50% { background: var(--teal-300); box-shadow: 0 0 18px rgba(95,224,209,.9); } }
+.motion .dots:not(.ep-break .dots) i:last-child { animation: breathe 2.6s ease-in-out infinite; }
+
+/* Logo dots: the lit dot breathes; at the finale the first two try and go dark */
+.logo-anim .d3, .logo-anim .d3g { transform-box: fill-box; transform-origin: center; }
+.motion .logo-anim .d3g { animation: glow 2.6s ease-in-out infinite; }
+@keyframes glow { 0%, 100% { opacity: .35; } 50% { opacity: .9; } }
+.motion .final-logo .d1, .motion .final-logo .d2 { fill: #3A4A70; }
+.motion .final-logo:not(.in) .d3, .motion .final-logo:not(.in) .d3g { opacity: 0; }
+.motion .final-logo.in .d1 { animation: svg-try 1s ease both; }
+.motion .final-logo.in .d2 { animation: svg-try 1s .35s ease both; }
+.motion .final-logo.in .d3 { animation: svg-on .5s .75s ease both; }
+.motion .final-logo.in .d3g { animation: svg-on .5s .75s ease both, glow 2.6s 1.3s ease-in-out infinite; }
+@keyframes svg-try { 35% { fill: var(--teal); } 100% { fill: #3A4A70; } }
+@keyframes svg-on { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+.final h2 em { display: inline-block; }
+.motion .final.in h2 em { animation: rise .8s 1s both; }
+
+/* Three steps: a line fills as you scroll and each step lights when reached (desktop) */
+.motion .step-n { background: var(--navy-700); color: var(--teal); box-shadow: inset 0 0 0 2px var(--teal); transition: background .4s, color .4s, box-shadow .4s; position: relative; }
+.motion .step-n.lit { background: var(--teal); color: var(--navy-900); box-shadow: var(--glow); }
+@media (min-width: 961px) {
+  .motion .step-block > :not(.step-head) { margin-right: 66px; } /* physical side: some children are dir=ltr */
+  .motion .step-n::before, .motion .step-n::after { content: ""; position: absolute; top: 56px; right: 23px; width: 2px; height: var(--len, 0px); background: var(--navy-600); border-radius: 2px; }
+  .motion .step-n::after { background: var(--teal); transform-origin: top; transform: scaleY(var(--fill, 0)); box-shadow: 0 0 10px rgba(19,184,166,.6); }
+}
+
+/* Stats count up */
+.stats b { font-variant-numeric: tabular-nums; }
+
+/* Quiz: questions slide in, result ring fills, kit items arrive one by one */
+.motion #q-stage > * { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
+.motion .q-opts button { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.1s + var(--i, 0) * 70ms); }
+.motion .kit-item { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.5s + var(--i, 0) * 90ms); }
+.motion .kit-item.done .n { animation: pop .4s both; animation-delay: calc(.7s + var(--i, 0) * 90ms); }
+@keyframes pop { 0% { transform: scale(.3); } 70% { transform: scale(1.15); } 100% { transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation: none !important; transition: none !important; }
+  .net .pk { display: none; }
 }
 @media print {
+  .rv { opacity: 1 !important; transform: none !important; }
   .nav, .hero, #recap, #solutions, #business, .section:not(#quiz), .footer, .result-actions, .quiz-progress { display: none !important; }
   body, .section-alt, .quiz, .kit-item { background: #fff !important; color: #000 !important; }
 }
