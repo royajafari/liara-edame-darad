@@ -212,9 +212,34 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 .go-score { font-size: 76px; font-weight: 900; color: var(--teal); line-height: 1.15; font-variant-numeric: tabular-nums; }
 .go-dots { font-size: 30px; margin: 0 0 18px; }
 .go-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+/* Win: the brick-style figure jumps in, throws its arms up, keeps waving */
+.win { position: absolute; left: calc(100% + 40px); bottom: 0; width: 170px; pointer-events: none; } /* beside the result, to its right */
+.win .fig { display: block; width: 100%; height: auto; overflow: visible; animation: fig-in .6s cubic-bezier(.2,.9,.3,1.2) both; }
+.win-badge { position: absolute; top: -40px; left: 50%; transform: translateX(-50%) rotate(-6deg); background: var(--amber); color: var(--navy-900); font-weight: 900; font-size: 18px; padding: 4px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 8px 24px rgba(246,185,76,.35); animation: badge-in .4s 1s cubic-bezier(.2,.9,.3,1.4) both; z-index: 1; }
+.fig .arm, .fig .fig-body, .fig .fig-shadow, .fig .eye { transform-box: view-box; }
+.fig .arm-l { transform-origin: 48px 82px; transform: rotate(150deg); animation: arm-l-up .35s .55s ease-out both; }
+.fig .arm-r { transform-origin: 122px 82px; transform: rotate(-150deg); animation: arm-r-up .35s .55s ease-out both, wave .7s 2.2s ease-in-out infinite; }
+.fig .fig-body { animation: jump .45s .9s ease-in-out 3; }
+.fig .fig-shadow { fill: rgba(0,0,0,.35); transform-origin: 85px 222px; animation: shadow .45s .9s ease-in-out 3; }
+.fig .eye { transform-origin: center 38px; animation: blink 3.6s 2s infinite; }
+@keyframes fig-in { from { transform: translateY(115%); } 70% { transform: translateY(-5%); } to { transform: none; } }
+@keyframes badge-in { from { opacity: 0; transform: translateX(-50%) scale(.3) rotate(-6deg); } to { opacity: 1; transform: translateX(-50%) rotate(-6deg); } }
+@keyframes arm-l-up { from { transform: rotate(0); } to { transform: rotate(150deg); } }
+@keyframes arm-r-up { from { transform: rotate(0); } to { transform: rotate(-150deg); } }
+@keyframes wave { 0%, 100% { transform: rotate(-150deg); } 50% { transform: rotate(-118deg); } }
+@keyframes jump { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-24px); } }
+@keyframes shadow { 0%, 100% { transform: scaleX(1); } 45% { transform: scaleX(.65); } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation-name: fall; animation-timing-function: linear; animation-fill-mode: both; }
+@keyframes fall { from { transform: translateY(0) rotate(0); } to { transform: translateY(640px) rotate(var(--r)); } }
+@media (max-width: 980px) {
+  .win { position: relative; left: auto; bottom: auto; width: 92px; margin: 26px auto 0; }
+  .win-badge { font-size: 14px; padding: 2px 12px; top: -26px; }
+}
 .motion .game-overlay:not([hidden]) .go-in { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
 @media (max-width: 560px) {
-  .game canvas { height: 580px; }
+  .game canvas { height: 640px; }
   .go-in h3 { font-size: 21px; }
   .go-score { font-size: 58px; }
   .go-actions .btn { padding: 12px 20px; font-size: 15px; }

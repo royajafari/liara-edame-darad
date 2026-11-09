@@ -293,6 +293,46 @@
     kick();
     cv.focus?.();
   };
+  /* ---------- Win: an original brick-style figure cheers (score ≥ WIN) ---------- */
+  const WIN = 80;
+  const FIGURE = `
+    <svg class="fig" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+      <ellipse class="fig-shadow" cx="85" cy="222" rx="46" ry="6"/>
+      <g class="fig-body">
+        <g class="arm arm-l"><rect x="40" y="78" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="48" cy="126" r="9" fill="#F3C79B"/></g>
+        <g class="arm arm-r"><rect x="114" y="78" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="122" cy="126" r="9" fill="#F3C79B"/></g>
+        <path d="M54 74 H116 L124 138 H46 Z" fill="#13B8A6"/>
+        <path d="M54 74 H116 L117 82 H53 Z" fill="#5FE0D1" opacity=".55"/>
+        <circle cx="74" cy="106" r="5" fill="#0B1224" opacity=".5"/><circle cx="86" cy="106" r="5" fill="#0B1224" opacity=".5"/><circle cx="98" cy="106" r="5" fill="#F4F7FB"/>
+        <rect x="76" y="64" width="18" height="12" rx="3" fill="#E2B486"/>
+        <rect x="70" y="8" width="30" height="12" rx="4" fill="#E2B486"/>
+        <rect x="58" y="16" width="54" height="50" rx="14" fill="#F3C79B"/>
+        <ellipse class="eye" cx="74" cy="38" rx="4" ry="5" fill="#141D35"/><ellipse class="eye" cx="96" cy="38" rx="4" ry="5" fill="#141D35"/>
+        <path d="M70 48 Q85 62 100 48" stroke="#141D35" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="66" cy="49" r="4" fill="#F06A6A" opacity=".35"/><circle cx="104" cy="49" r="4" fill="#F06A6A" opacity=".35"/>
+        <rect x="44" y="136" width="82" height="14" rx="4" fill="#1C2848"/>
+        <rect x="46" y="148" width="37" height="58" rx="5" fill="#24304F"/><rect x="87" y="148" width="37" height="58" rx="5" fill="#24304F"/>
+        <rect x="44" y="202" width="41" height="14" rx="5" fill="#141D35"/><rect x="85" y="202" width="41" height="14" rx="5" fill="#141D35"/>
+      </g>
+      <g class="fig-laptop"><rect x="128" y="186" width="38" height="24" rx="3" fill="#24304F" stroke="#13B8A6" stroke-width="2"/><rect x="122" y="210" width="50" height="6" rx="3" fill="#13B8A6"/><path d="M137 199 l5 5 l10 -11" stroke="#5FE0D1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    </svg>`;
+  const celebrate = () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'win';
+    wrap.innerHTML = `<div class="win-badge">بردی!</div>${FIGURE}`;
+    overlay.querySelector('.go-in').prepend(wrap);
+    if (reduced) return;
+    const colors = [C.teal, C.teal3, C.amber, C.ice];
+    const rain = document.createElement('div');
+    rain.className = 'confetti';
+    rain.innerHTML = Array.from({ length: 34 }, (_, k) => {
+      const left = Math.random() * 100, delay = Math.random() * 0.9, dur = 1.8 + Math.random() * 1.4, rot = Math.random() * 720 - 360;
+      return `<i style="left:${left}%;background:${colors[k % 4]};animation-delay:${delay}s;animation-duration:${dur}s;--r:${rot}deg"></i>`;
+    }).join('');
+    overlay.append(rain);
+    setTimeout(() => rain.remove(), 4500);
+  };
+
   const finish = () => {
     S.running = false; S.done = true;
     const score = Math.round((S.up / S.total) * 100);
@@ -319,7 +359,8 @@
     if (reduced) b.textContent = fa(score);
     else tween(1100, (e) => (b.textContent = fa(Math.round(score * e))));
     overlay.querySelector('#game-again').addEventListener('click', start);
-    say(`بازی تمام شد. کار تو ${score} درصد وقت ادامه داشت.`);
+    if (score >= WIN) celebrate();
+    say(`بازی تمام شد. کار تو ${score} درصد وقت ادامه داشت.${score >= WIN ? ' بردی!' : ''}`);
     track('game_complete', { score, moved });
   };
 
