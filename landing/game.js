@@ -280,7 +280,8 @@
         <p>روی هر خط ضربه بزن تا به لیارا داخل ایران منتقل بشه. خطی که منتقل نشده، وسط قطعی متوقف می‌شه.</p>
         <button class="btn" id="game-start">شروع بازی</button>
         <small>روی دسکتاپ کلیدهای ۱ تا ۸ هم کار می‌کنن.</small>
-      </div>`;
+      </div>
+      <div class="walker" aria-hidden="true"><div class="walk">${FIG_WALK}</div></div>`;
     overlay.querySelector('#game-start').addEventListener('click', start);
     kick();
   };
@@ -293,35 +294,81 @@
     kick();
     cv.focus?.();
   };
-  /* ---------- Win: an original brick-style figure cheers (score ≥ WIN) ---------- */
+  /* ---------- End of game: an original brick-style figure ----------
+     score ≥ WIN: jumps in, arms up, waves, confetti.
+     score < WIN: sits on the ground and cries; a puddle spreads around it. */
   const WIN = 80;
-  const FIGURE = `
-    <svg class="fig" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+  const SKIN = '#F3C79B', SKIN2 = '#E2B486', HAIR = '#3B2A20', INK = '#141D35';
+  // Head with hair; `face` is the expression, `dy` shifts it down (sitting pose).
+  const head = (face, dy = 0) => `
+    <g transform="translate(0 ${dy})">
+      <rect x="76" y="62" width="18" height="14" rx="3" fill="${SKIN2}"/>
+      <rect x="58" y="16" width="54" height="50" rx="14" fill="${SKIN}"/>
+      <path d="M54 44 C49 15 68 3 86 4 C106 5 122 16 116 44 C113 33 106 25 95 23 C87 31 72 32 61 27 C58 32 56 38 54 44 Z" fill="${HAIR}"/>
+      <path d="M95 23 C99 15 108 13 112 17" stroke="#5A4232" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+      <circle cx="66" cy="50" r="4" fill="#F06A6A" opacity=".35"/><circle cx="104" cy="50" r="4" fill="#F06A6A" opacity=".35"/>
+      ${face}
+    </g>`;
+  const HAPPY = `
+    <ellipse class="eye" cx="74" cy="40" rx="4" ry="5" fill="${INK}"/><ellipse class="eye" cx="96" cy="40" rx="4" ry="5" fill="${INK}"/>
+    <path d="M70 49 Q85 63 100 49" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  const SAD = `
+    <path d="M68 41 Q74 36 80 41" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M90 41 Q96 36 102 41" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M66 33 L79 30 M104 33 L91 30" stroke="${HAIR}" stroke-width="3" stroke-linecap="round"/>
+    <ellipse class="wail" cx="85" cy="54" rx="8" ry="6" fill="${INK}"/><ellipse cx="85" cy="57" rx="4.5" ry="2.5" fill="#F06A6A"/>
+    <g transform="translate(74 44)"><path class="tear tl" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>
+    <g transform="translate(96 44)"><path class="tear tr" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>`;
+  const SHIRT = (y) => `
+    <path d="M54 ${y} H116 L124 ${y + 64} H46 Z" fill="#13B8A6"/>
+    <path d="M54 ${y} H116 L117 ${y + 8} H53 Z" fill="#5FE0D1" opacity=".55"/>
+    <circle cx="74" cy="${y + 32}" r="5" fill="#0B1224" opacity=".5"/><circle cx="86" cy="${y + 32}" r="5" fill="#0B1224" opacity=".5"/><circle cx="98" cy="${y + 32}" r="5" fill="#F4F7FB"/>`;
+  const arm = (side, y) => {
+    const x = side === 'l' ? 40 : 114, hx = side === 'l' ? 48 : 122;
+    return `<g class="arm arm-${side}"><rect x="${x}" y="${y + 4}" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="${hx}" cy="${y + 52}" r="9" fill="${SKIN}"/></g>`;
+  };
+  const FIG_WIN = `
+    <svg class="fig fig-win" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
       <ellipse class="fig-shadow" cx="85" cy="222" rx="46" ry="6"/>
       <g class="fig-body">
-        <g class="arm arm-l"><rect x="40" y="78" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="48" cy="126" r="9" fill="#F3C79B"/></g>
-        <g class="arm arm-r"><rect x="114" y="78" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="122" cy="126" r="9" fill="#F3C79B"/></g>
-        <path d="M54 74 H116 L124 138 H46 Z" fill="#13B8A6"/>
-        <path d="M54 74 H116 L117 82 H53 Z" fill="#5FE0D1" opacity=".55"/>
-        <circle cx="74" cy="106" r="5" fill="#0B1224" opacity=".5"/><circle cx="86" cy="106" r="5" fill="#0B1224" opacity=".5"/><circle cx="98" cy="106" r="5" fill="#F4F7FB"/>
-        <rect x="76" y="64" width="18" height="12" rx="3" fill="#E2B486"/>
-        <rect x="70" y="8" width="30" height="12" rx="4" fill="#E2B486"/>
-        <rect x="58" y="16" width="54" height="50" rx="14" fill="#F3C79B"/>
-        <ellipse class="eye" cx="74" cy="38" rx="4" ry="5" fill="#141D35"/><ellipse class="eye" cx="96" cy="38" rx="4" ry="5" fill="#141D35"/>
-        <path d="M70 48 Q85 62 100 48" stroke="#141D35" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <circle cx="66" cy="49" r="4" fill="#F06A6A" opacity=".35"/><circle cx="104" cy="49" r="4" fill="#F06A6A" opacity=".35"/>
+        ${arm('l', 74)}${arm('r', 74)}${SHIRT(74)}${head(HAPPY)}
         <rect x="44" y="136" width="82" height="14" rx="4" fill="#1C2848"/>
         <rect x="46" y="148" width="37" height="58" rx="5" fill="#24304F"/><rect x="87" y="148" width="37" height="58" rx="5" fill="#24304F"/>
-        <rect x="44" y="202" width="41" height="14" rx="5" fill="#141D35"/><rect x="85" y="202" width="41" height="14" rx="5" fill="#141D35"/>
+        <rect x="44" y="202" width="41" height="14" rx="5" fill="${INK}"/><rect x="85" y="202" width="41" height="14" rx="5" fill="${INK}"/>
       </g>
-      <g class="fig-laptop"><rect x="128" y="186" width="38" height="24" rx="3" fill="#24304F" stroke="#13B8A6" stroke-width="2"/><rect x="122" y="210" width="50" height="6" rx="3" fill="#13B8A6"/><path d="M137 199 l5 5 l10 -11" stroke="#5FE0D1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g><rect x="128" y="186" width="38" height="24" rx="3" fill="#24304F" stroke="#13B8A6" stroke-width="2"/><rect x="122" y="210" width="50" height="6" rx="3" fill="#13B8A6"/><path d="M137 199 l5 5 l10 -11" stroke="#5FE0D1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
     </svg>`;
-  const celebrate = () => {
+  const FIG_LOSE = `
+    <svg class="fig fig-lose" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+      <g class="puddle"><ellipse cx="85" cy="212" rx="104" ry="15" fill="rgba(79,163,224,.45)"/><ellipse cx="85" cy="212" rx="104" ry="15" fill="none" stroke="rgba(124,196,242,.7)" stroke-width="2"/><ellipse cx="52" cy="208" rx="30" ry="3.5" fill="rgba(200,232,252,.55)"/><ellipse cx="128" cy="216" rx="16" ry="2.5" fill="rgba(200,232,252,.4)"/></g>
+      <ellipse class="ripple" cx="85" cy="212" rx="40" ry="6"/>
+      <ellipse class="ripple r2" cx="85" cy="212" rx="40" ry="6"/>
+      <g class="fig-body">
+        ${arm('l', 104)}${arm('r', 104)}${SHIRT(104)}
+        <rect x="44" y="166" width="82" height="12" rx="4" fill="#1C2848"/>
+        <rect x="46" y="176" width="37" height="18" rx="4" fill="#24304F"/><rect x="87" y="176" width="37" height="18" rx="4" fill="#24304F"/>
+        <rect x="40" y="190" width="45" height="18" rx="7" fill="${INK}"/><rect x="85" y="190" width="45" height="18" rx="7" fill="${INK}"/>
+        <g class="sob">${head(SAD, 30)}</g>
+      </g>
+      <g class="fig-laptop-off"><rect x="132" y="182" width="34" height="22" rx="3" fill="#24304F" stroke="#F06A6A" stroke-width="2"/><rect x="127" y="204" width="44" height="5" rx="2.5" fill="#3A4A70"/><path d="M144 188 l10 10 M154 188 l-10 10" stroke="#F06A6A" stroke-width="3" stroke-linecap="round"/></g>
+    </svg>`;
+  // Start screen: the same figure walks left and right along the bottom.
+  const FIG_WALK = `
+    <svg class="fig fig-walk" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+      <ellipse class="fig-shadow" cx="85" cy="222" rx="40" ry="5"/>
+      <g class="fig-body">
+        <g class="leg leg-l"><rect x="46" y="146" width="37" height="58" rx="5" fill="#24304F"/><rect x="44" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
+        <g class="leg leg-r"><rect x="87" y="146" width="37" height="58" rx="5" fill="#24304F"/><rect x="85" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
+        <rect x="44" y="136" width="82" height="14" rx="4" fill="#1C2848"/>
+        ${arm("l", 74)}${arm("r", 74)}${SHIRT(74)}${head(HAPPY)}
+      </g>
+    </svg>`;
+  const endScene = (win) => {
     const wrap = document.createElement('div');
-    wrap.className = 'win';
-    wrap.innerHTML = `<div class="win-badge">بردی!</div>${FIGURE}`;
+    wrap.className = `win ${win ? 'is-win' : 'is-lose'}`;
+    wrap.innerHTML = `<div class="win-badge">${win ? 'بردی!' : 'ای وای…'}</div>${win ? FIG_WIN : FIG_LOSE}`;
     overlay.querySelector('.go-in').prepend(wrap);
-    if (reduced) return;
+    if (reduced || !win) return;
     const colors = [C.teal, C.teal3, C.amber, C.ice];
     const rain = document.createElement('div');
     rain.className = 'confetti';
@@ -359,8 +406,8 @@
     if (reduced) b.textContent = fa(score);
     else tween(1100, (e) => (b.textContent = fa(Math.round(score * e))));
     overlay.querySelector('#game-again').addEventListener('click', start);
-    if (score >= WIN) celebrate();
-    say(`بازی تمام شد. کار تو ${score} درصد وقت ادامه داشت.${score >= WIN ? ' بردی!' : ''}`);
+    endScene(score >= WIN);
+    say(`بازی تمام شد. کار تو ${score} درصد وقت ادامه داشت.${score >= WIN ? ' بردی!' : ' این بار نشد؛ دوباره امتحان کن.'}`);
     track('game_complete', { score, moved });
   };
 

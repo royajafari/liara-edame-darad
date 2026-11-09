@@ -216,12 +216,46 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 .win { position: absolute; left: calc(100% + 40px); bottom: 0; width: 170px; pointer-events: none; } /* beside the result, to its right */
 .win .fig { display: block; width: 100%; height: auto; overflow: visible; animation: fig-in .6s cubic-bezier(.2,.9,.3,1.2) both; }
 .win-badge { position: absolute; top: -40px; left: 50%; transform: translateX(-50%) rotate(-6deg); background: var(--amber); color: var(--navy-900); font-weight: 900; font-size: 18px; padding: 4px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 8px 24px rgba(246,185,76,.35); animation: badge-in .4s 1s cubic-bezier(.2,.9,.3,1.4) both; z-index: 1; }
-.fig .arm, .fig .fig-body, .fig .fig-shadow, .fig .eye { transform-box: view-box; }
-.fig .arm-l { transform-origin: 48px 82px; transform: rotate(150deg); animation: arm-l-up .35s .55s ease-out both; }
-.fig .arm-r { transform-origin: 122px 82px; transform: rotate(-150deg); animation: arm-r-up .35s .55s ease-out both, wave .7s 2.2s ease-in-out infinite; }
-.fig .fig-body { animation: jump .45s .9s ease-in-out 3; }
-.fig .fig-shadow { fill: rgba(0,0,0,.35); transform-origin: 85px 222px; animation: shadow .45s .9s ease-in-out 3; }
-.fig .eye { transform-origin: center 38px; animation: blink 3.6s 2s infinite; }
+.fig * { transform-box: view-box; }
+.fig .fig-shadow { fill: rgba(0,0,0,.35); transform-origin: 85px 222px; }
+.fig .eye { transform-origin: 85px 40px; animation: eye-blink 3.6s 2s infinite; }
+/* win: arms up, three jumps, then waving */
+.fig-win .arm-l { transform-origin: 48px 82px; transform: rotate(150deg); animation: arm-l-up .35s .55s ease-out both; }
+.fig-win .arm-r { transform-origin: 122px 82px; transform: rotate(-150deg); animation: arm-r-up .35s .55s ease-out both, wave .7s 2.2s ease-in-out infinite; }
+.fig-win .fig-body { animation: jump .45s .9s ease-in-out 3; }
+.fig-win .fig-shadow { animation: shadow .45s .9s ease-in-out 3; }
+/* lose: sits, sobs, tears fly, a puddle spreads */
+.is-lose .win-badge { background: var(--red); box-shadow: 0 8px 24px rgba(240,106,106,.35); }
+.fig-lose .arm-l { transform-origin: 48px 112px; transform: rotate(28deg); }
+.fig-lose .arm-r { transform-origin: 122px 112px; transform: rotate(-28deg); }
+.fig-lose .sob { transform-origin: 85px 110px; animation: sob .45s 1s ease-in-out infinite alternate; }
+.fig-lose .wail { transform-origin: 85px 54px; animation: wail .45s 1s ease-in-out infinite alternate; }
+.tear { fill: #7CC4F2; animation: tear-l 1s 1s linear infinite both; }
+.tear.tr { animation-name: tear-r; }
+.tear.d2 { animation-delay: 1.33s; } .tear.d3 { animation-delay: 1.66s; }
+.puddle { transform-origin: 85px 212px; animation: puddle 6s 1.4s cubic-bezier(.2,.7,.3,1) both; }
+.ripple { fill: none; stroke: rgba(200,232,252,.75); stroke-width: 1.5; opacity: 0; transform-origin: 85px 212px; animation: ripple 2s 2.6s ease-out infinite; }
+.ripple.r2 { animation-delay: 3.6s; }
+@keyframes sob { to { transform: translateY(3px) rotate(-1.5deg); } }
+@keyframes wail { to { transform: scale(1.1, .7); } }
+@keyframes tear-l { 0% { opacity: 0; transform: translate(0, 0) scale(.5); } 10% { opacity: 1; } 35% { transform: translate(-16px, -7px) scale(1); } 100% { opacity: 0; transform: translate(-34px, 66px) scale(.8); } }
+@keyframes tear-r { 0% { opacity: 0; transform: translate(0, 0) scale(.5); } 10% { opacity: 1; } 35% { transform: translate(16px, -7px) scale(1); } 100% { opacity: 0; transform: translate(34px, 66px) scale(.8); } }
+@keyframes puddle { from { transform: scale(.05, .3); opacity: .4; } to { transform: none; opacity: 1; } }
+@keyframes ripple { 0% { transform: scale(.3); opacity: .9; } 100% { transform: scale(2.3, 2); opacity: 0; } }
+/* walk: back and forth along the bottom of the start screen */
+.walker { position: absolute; left: 0; right: 0; bottom: 6px; height: 104px; pointer-events: none; }
+.walk { position: absolute; bottom: 0; left: 3%; width: 76px; animation: walk-x 14s linear infinite; }
+.walk .fig { display: block; width: 100%; height: auto; overflow: visible; animation: walk-face 14s steps(1) infinite; }
+.fig-walk .leg-l { transform-origin: 64px 148px; animation: stride .5s ease-in-out infinite alternate; }
+.fig-walk .leg-r { transform-origin: 106px 148px; animation: stride .5s ease-in-out infinite alternate-reverse; }
+.fig-walk .arm-l { transform-origin: 48px 82px; animation: swing .5s ease-in-out infinite alternate-reverse; }
+.fig-walk .arm-r { transform-origin: 122px 82px; animation: swing .5s ease-in-out infinite alternate; }
+.fig-walk .fig-body { animation: bob .25s ease-in-out infinite alternate; }
+@keyframes walk-x { 0% { left: 3%; } 46% { left: calc(97% - 76px); } 50% { left: calc(97% - 76px); } 96% { left: 3%; } 100% { left: 3%; } }
+@keyframes walk-face { 0% { transform: rotate(4deg); } 48% { transform: scaleX(-1) rotate(4deg); } 98% { transform: rotate(4deg); } }
+@keyframes stride { from { transform: rotate(16deg); } to { transform: rotate(-16deg); } }
+@keyframes swing { from { transform: rotate(18deg); } to { transform: rotate(-18deg); } }
+@keyframes bob { to { transform: translateY(-4px); } }
 @keyframes fig-in { from { transform: translateY(115%); } 70% { transform: translateY(-5%); } to { transform: none; } }
 @keyframes badge-in { from { opacity: 0; transform: translateX(-50%) scale(.3) rotate(-6deg); } to { opacity: 1; transform: translateX(-50%) rotate(-6deg); } }
 @keyframes arm-l-up { from { transform: rotate(0); } to { transform: rotate(150deg); } }
@@ -229,7 +263,7 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 @keyframes wave { 0%, 100% { transform: rotate(-150deg); } 50% { transform: rotate(-118deg); } }
 @keyframes jump { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-24px); } }
 @keyframes shadow { 0%, 100% { transform: scaleX(1); } 45% { transform: scaleX(.65); } }
-@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes eye-blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
 .confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .confetti i { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation-name: fall; animation-timing-function: linear; animation-fill-mode: both; }
 @keyframes fall { from { transform: translateY(0) rotate(0); } to { transform: translateY(640px) rotate(var(--r)); } }
