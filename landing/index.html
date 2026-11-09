@@ -36,6 +36,7 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObse
       <a href="#recap">مسئله</a>
       <a href="#solutions">راهکارها</a>
       <a href="#business">کسب‌وکار تو</a>
+      <a href="#game">بازی</a>
       <a href="#faq">سؤال‌ها</a>
     </nav>
     <div class="nav-actions">
@@ -175,6 +176,20 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObse
     </div>
   </section>
 
+  <!-- GAME: a 45-second outage drill -->
+  <section id="game" class="section grid-bg">
+    <div class="container">
+      <p class="eyebrow">بازی | ۴۵ ثانیه</p>
+      <h2>تمرین قطعی: <em>کار رو ادامه بده.</em></h2>
+      <p class="section-lead">وابستگی‌های کارت یکی‌یکی از راه می‌رسن و قطعی هم هر چند ثانیه سر می‌زنه. قبل از قطعی، هر کدوم رو با یه ضربه به لیارا داخل ایران منتقل کن.</p>
+      <div class="game" id="game-box">
+        <canvas id="game-canvas" role="img" aria-label="بازی تمرین قطعی: خط‌های وابستگی بین اینترنت بین‌الملل و کار تو؛ با ضربه روی هر خط، آن را به لیارا منتقل کن."></canvas>
+        <div class="game-overlay" id="game-overlay"></div>
+        <p class="sr-only" id="game-live" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
   <!-- QUIZ -->
   <section id="quiz" class="section section-alt grid-bg">
     <div class="container narrow">
@@ -260,5 +275,6 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObse
 </footer>
 
 <script src="app.js"></script>
+<script src="game.js"></script>
 </body>
 </html>

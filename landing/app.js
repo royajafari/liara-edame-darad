@@ -305,6 +305,8 @@
   // Business choice also tailors the quiz result.
   renderQ(0);
   decorate();
+  // Shared with game.js.
+  window.edame = { fa, track, decorate, tween, L };
 
   /* ---------- Motion graphics (skipped entirely under reduced motion) ---------- */
   if (motion) {
