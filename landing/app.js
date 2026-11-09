@@ -5,8 +5,35 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const fa = (n) => String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const UTM = 'utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad';
-  const CONSOLE = (content) => `https://console.liara.ir/?${UTM}&utm_content=${content}`;
+  /* Every outbound link is a gateway to a section of Liara. */
+  const L = {
+    auth: 'https://console.liara.ir/auth',
+    ticket: 'https://console.liara.ir/tickets/create',
+    mirrors: 'https://liara.ir/mirrors/',
+    mirror: (k) => `https://liara.ir/mirrors/${k}/`,
+    paas: 'https://docs.liara.ir/paas/about/',
+    db: 'https://liara.ir/products/cloud-database/',
+    storage: 'https://liara.ir/products/object-storage/',
+    vps: 'https://liara.ir/products/cloud-server/',
+    woo: 'https://liara.ir/products/woocommerce-hosting/',
+    backup: 'https://docs.liara.ir/paas/disks/restore-backup-using-ftp',
+    cli: 'https://docs.liara.ir/references/cli/about/',
+    pricing: 'https://liara.ir/pricing/',
+    status: 'https://liara.online/',
+  };
+  const isLiara = (u) => /(^|\.)liara\.(ir|online)$/.test(u.hostname);
+  // Adds campaign UTM tags and opens Liara links in a new tab.
+  const decorate = (root = document) => $$('a[href^="http"]', root).forEach((a) => {
+    const u = new URL(a.href);
+    if (!isLiara(u) || u.searchParams.has('utm_campaign')) return;
+    u.searchParams.set('utm_source', 'edame-darad');
+    u.searchParams.set('utm_medium', 'landing');
+    u.searchParams.set('utm_campaign', 'edame-darad');
+    if (a.dataset.track) u.searchParams.set('utm_content', a.dataset.track);
+    a.href = u.toString();
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
 
   /* ---------- Analytics hook (ready for any tag manager, sends nothing by itself) ---------- */
   window.dataLayer = window.dataLayer || [];
@@ -72,14 +99,20 @@
 
   /* ---------- Mirror commands ---------- */
   const CMDS = {
-    npm: { title: 'npm', code: 'npm config set registry https://package-mirror.liara.ir/repository/npm/ --global\nnpm config get registry' },
-    pip: { title: 'pip  (Windows: setx PIP_INDEX_URL "…")', code: 'export PIP_INDEX_URL=https://package-mirror.liara.ir/repository/pypi/simple' },
-    docker: { title: '/etc/docker/daemon.json', code: '{\n  "registry-mirrors": [\n    "https://docker-mirror.liara.ir"\n  ]\n}\n\n# then:\nsudo systemctl daemon-reload\nsudo systemctl restart docker' },
+    npm: { label: 'npm', title: 'npm', code: 'npm config set registry https://package-mirror.liara.ir/repository/npm/ --global\nnpm config get registry' },
+    pip: { label: 'PyPI', title: 'pip  (Windows: setx PIP_INDEX_URL "…")', code: 'export PIP_INDEX_URL=https://package-mirror.liara.ir/repository/pypi/simple' },
+    docker: { label: 'Docker Hub', title: '/etc/docker/daemon.json', code: '{\n  "registry-mirrors": [\n    "https://docker-mirror.liara.ir"\n  ]\n}\n\n# then:\nsudo systemctl daemon-reload\nsudo systemctl restart docker' },
   };
   const showCmd = (k) => {
     $('#code-box').textContent = CMDS[k].code;
     $('#code-title').textContent = CMDS[k].title;
     $$('.tabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === k)));
+    const g = $('#cmd-guide');
+    const slug = { npm: 'npm', pip: 'pypi', docker: 'docker' }[k];
+    g.href = L.mirror(slug);
+    g.dataset.track = 'mirror_guide_' + slug;
+    g.textContent = `راهنمای میرور ${CMDS[k].label} در لیارا ←`;
+    decorate(g.parentElement);
   };
   $$('.tabs [data-tab]').forEach((b) => b.addEventListener('click', () => { showCmd(b.dataset.tab); track('tab', { id: b.dataset.tab }); }));
   showCmd('npm');
@@ -100,10 +133,10 @@
     shop: {
       name: 'فروشگاه اینترنتی',
       stack: [
-        ['هاست ووکامرس / پلتفرم', 'سایت فروشگاه روی دیتاسنتر داخل ایران'],
-        ['دیتابیس ابری', 'سفارش‌ها و مشتری‌ها کنار اپ'],
-        ['ذخیره‌سازی ابری', 'عکس محصولات بدون CDN خارجی'],
-        ['بکاپ رایگان', 'تا ۱۰ برابر فضای پلن'],
+        ['هاست ووکامرس', 'سایت فروشگاه روی دیتاسنتر داخل ایران', L.woo],
+        ['دیتابیس ابری', 'سفارش‌ها و مشتری‌ها کنار اپ', L.db],
+        ['ذخیره‌سازی ابری', 'عکس محصولات بدون CDN خارجی', L.storage],
+        ['بکاپ رایگان', 'تا ۱۰ برابر فضای پلن', L.backup],
       ],
       check: [
         ['درگاه پرداخت', 'مطمئن شو درگاهت داخلیه و تو سناریوی قطعی تستش کن'],
@@ -114,10 +147,10 @@
     api: {
       name: 'وب‌اپ و API',
       stack: [
-        ['میرورها', 'npm، PyPI، Docker Hub، Go و Composer داخل ایران'],
-        ['پلتفرم (PaaS)', 'استقرار با liara deploy در کمتر از ۵ دقیقه'],
-        ['دیتابیس ابری', 'PostgreSQL، MySQL، MongoDB، Redis'],
-        ['ذخیره‌سازی ابری', 'آپلودها و فایل‌های استاتیک'],
+        ['میرورها', 'npm، PyPI، Docker Hub، Go و Composer داخل ایران', L.mirrors],
+        ['پلتفرم (PaaS)', 'استقرار با liara deploy در کمتر از ۵ دقیقه', L.paas],
+        ['دیتابیس ابری', 'PostgreSQL، MySQL، MongoDB، Redis', L.db],
+        ['ذخیره‌سازی ابری', 'آپلودها و فایل‌های استاتیک', L.storage],
       ],
       check: [
         ['CI/CD', 'پایپ‌لاینی که از GitHub Actions یا رجیستری خارجی می‌کشه'],
@@ -128,10 +161,10 @@
     org: {
       name: 'سامانه‌ی سازمانی',
       stack: [
-        ['سرور مجازی ابری', 'کنترل کامل، همه‌ی پلن‌ها در ایران'],
-        ['دیتابیس ابری', 'SQL Server، PostgreSQL و…'],
-        ['بکاپ و پایش', 'بازیابی قابل‌تست و پایش شبانه‌روزی'],
-        ['میرورهای لینوکس', 'به‌روزرسانی Ubuntu، Debian، Rocky بدون اینترنت بین‌الملل'],
+        ['سرور مجازی ابری', 'کنترل کامل، همه‌ی پلن‌ها در ایران', L.vps],
+        ['دیتابیس ابری', 'SQL Server، PostgreSQL و…', L.db],
+        ['بکاپ و پایش', 'بازیابی قابل‌تست و پایش شبانه‌روزی', L.backup],
+        ['میرورهای لینوکس', 'به‌روزرسانی Ubuntu، Debian و… بدون اینترنت بین‌الملل', L.mirror('ubuntu')],
       ],
       check: [
         ['لایسنس و فعال‌سازی', 'نرم‌افزارهایی که برای کار به سرور خارجی زنگ می‌زنن'],
@@ -143,10 +176,12 @@
   let biz = 'shop';
   const renderBiz = () => {
     const b = BIZ[biz];
-    const li = ([t, d]) => `<li><div><b>${t}</b><span>${d}</span></div></li>`;
+    const li = ([t, d, href], i) => `<li><div>${href ? `<a class="biz-link" href="${href}" data-track="biz_${biz}_${i}">${t} ←</a>` : `<b>${t}</b>`}<span>${d}</span></div></li>`;
     $('#biz-panel').innerHTML = `
       <div class="biz-col"><h3>راهکار لیارا برای ${b.name}</h3><ul>${b.stack.map(li).join('')}</ul></div>
-      <div class="biz-col check"><h3>اینا رو جدا بررسی کن</h3><ul>${b.check.map(li).join('')}</ul></div>`;
+      <div class="biz-col check"><h3>اینا رو جدا بررسی کن</h3><ul>${b.check.map(([t, d]) => li([t, d])).join('')}</ul>
+        <a class="link-more" href="${L.ticket}" data-track="biz_${biz}_ticket">برای بررسی، از پشتیبانی لیارا بپرس ←</a></div>`;
+    decorate($('#biz-panel'));
     $$('.biz-pick [data-biz]').forEach((x) => x.setAttribute('aria-selected', String(x.dataset.biz === biz)));
   };
   $$('.biz-pick [data-biz]').forEach((x) => x.addEventListener('click', () => { biz = x.dataset.biz; renderBiz(); track('biz', { id: biz }); }));
@@ -157,30 +192,30 @@
     {
       q: 'پکیج‌ها (npm، pip، Composer) و ایمیج‌های داکرت از کجا نصب می‌شن؟',
       o: [['از میرور داخلی، مثل میرور لیارا', 20], ['مستقیم از مخزن‌های خارجی', 0], ['نمی‌دونم', 0]],
-      fix: { t: 'پکیج‌ها رو روی میرور ایرانی ببر', d: 'یه خط تنظیم برای npm، pip و داکر؛ ریسکش تقریباً صفره.', a: 'https://liara.ir/mirrors/?' + UTM, al: 'راهنمای میرورها' },
+      fix: { t: 'پکیج‌ها رو روی میرور ایرانی ببر', d: 'یه خط تنظیم برای npm، pip و داکر؛ ریسکش تقریباً صفره.', a: L.mirrors, al: 'میرورهای لیارا' },
     },
     {
       q: 'اپ و دیتابیست کجا میزبانی می‌شن؟',
       o: [['هر دو داخل ایران', 20], ['یکی داخل، یکی خارج', 10], ['هر دو خارج از ایران', 0]],
-      fix: { t: 'اپ و دیتابیس رو کنار هم، داخل ایران بیار', d: 'یه نسخه‌ی آزمایشی روی پلتفرم و دیتابیس ابری لیارا بالا بیار.', a: CONSOLE('quiz_hosting'), al: 'ساخت اپ در کنسول' },
+      fix: { t: 'اپ و دیتابیس رو کنار هم، داخل ایران بیار', d: 'یه نسخه‌ی آزمایشی روی پلتفرم و دیتابیس ابری لیارا بالا بیار.', a: L.paas, al: 'آشنایی با پلتفرم لیارا' },
     },
     {
       q: 'فونت، اسکریپت و فایل‌های استاتیک سایتت از کجا لود می‌شن؟',
       o: [['همه از سرور خودم', 20], ['بعضی‌هاش از CDN خارجی', 10], ['نمی‌دونم', 0]],
-      fix: { t: 'وابستگی‌های فرانت رو بیار خونه', d: 'فونت و اسکریپت رو روی سرور خودت بذار؛ فایل‌ها و تصاویر رو روی ذخیره‌سازی ابری.', a: CONSOLE('quiz_static'), al: 'ذخیره‌سازی ابری' },
+      fix: { t: 'وابستگی‌های فرانت رو بیار خونه', d: 'فونت و اسکریپت رو روی سرور خودت بذار؛ فایل‌ها و تصاویر رو روی ذخیره‌سازی ابری.', a: L.storage, al: 'ذخیره‌سازی ابری لیارا' },
     },
     {
       q: 'بکاپ داری؟ بازیابی‌اش رو تا حالا تست کردی؟',
       o: [['بکاپ داریم و بازیابی رو تست کردیم', 20], ['بکاپ داریم، ولی تست نکردیم', 10], ['بکاپ منظم نداریم', 0]],
-      fix: { t: 'بکاپ بگیر و یک بار بازیابی کن', d: 'بکاپ لیارا تا ۱۰ برابر فضای پلن رایگانه؛ بکاپی که تست نشده، بکاپ نیست.', a: 'https://docs.liara.ir/?' + UTM, al: 'مستندات بکاپ' },
+      fix: { t: 'بکاپ بگیر و یک بار بازیابی کن', d: 'بکاپ لیارا تا ۱۰ برابر فضای پلن رایگانه؛ بکاپی که تست نشده، بکاپ نیست.', a: L.backup, al: 'راهنمای بازیابی بکاپ' },
     },
     {
       q: 'وابستگی‌هات به APIهای خارجی (پرداخت، نقشه، پیامک، لاگین، هوش مصنوعی) رو می‌شناسی؟',
       o: [['لیست داریم و جایگزین چیدیم', 20], ['می‌دونیم چی‌ان، جایگزین نداریم', 10], ['بررسی نکردیم', 0]],
-      fix: { t: 'لیست وابستگی‌های خارجی رو بنویس', d: 'برای هر کدوم یه جایگزین داخلی یا حالت «کار با امکانات محدود» تعریف کن.', a: null },
+      fix: { t: 'لیست وابستگی‌های خارجی رو بنویس', d: 'برای هر کدوم یه جایگزین داخلی یا حالت «کار با امکانات محدود» تعریف کن.', a: L.ticket, al: 'مشورت با پشتیبانی لیارا' },
     },
   ];
-  const DRILL = { t: 'یک «تمرین قطعی» اجرا کن', d: 'با پرداخت ساعتی لیارا یه محیط آزمایشی بساز، دسترسی بین‌الملل رو فرضاً ببند و ببین چی می‌لنگه.', a: CONSOLE('quiz_drill'), al: 'ساخت محیط آزمایشی' };
+  const DRILL = { t: 'یک «تمرین قطعی» اجرا کن', d: 'با پرداخت ساعتی لیارا یه محیط آزمایشی بساز، دسترسی بین‌الملل رو فرضاً ببند و ببین چی می‌لنگه.', a: L.pricing, al: 'تعرفه‌های ساعتی لیارا' };
 
   const stage = $('#q-stage');
   const bar = $('#q-bar');
@@ -218,7 +253,7 @@
     // Order: open items → business-specific item → drill → items already done.
     const all = Q.map((q, i) => ({ ...q.fix, done: q.o[answers[i]][1] === 20 }));
     const extra = biz === 'shop'
-      ? [{ t: 'درگاه پرداخت و پیامک رو تو سناریوی قطعی تست کن', d: 'بیشترین ضرر فروشگاه‌ها از همین دو نقطه‌ست.', a: null, done: false }]
+      ? [{ t: 'درگاه پرداخت و پیامک رو تو سناریوی قطعی تست کن', d: 'بیشترین ضرر فروشگاه‌ها از همین دو نقطه‌ست.', a: L.woo, al: 'هاست ووکامرس لیارا', done: false }]
       : [];
     const todo = [...all.filter((x) => !x.done), ...extra, { ...DRILL, done: false }, ...all.filter((x) => x.done)];
 
@@ -236,15 +271,16 @@
           <div class="kit-item ${x.done ? 'done' : ''}">
             <span class="n">${x.done ? '✓' : fa(i + 1)}</span>
             <div><b>${x.t}</b><p>${x.done ? 'این یکی رو داری؛ فقط مرتب تستش کن.' : x.d}</p>
-            ${!x.done && x.a ? `<a href="${x.a}" target="_blank" rel="noopener" data-track="kit_${i}">${x.al} ←</a>` : ''}</div>
+            ${!x.done && x.a ? `<a href="${x.a}" data-track="kit_${i}">${x.al} ←</a>` : ''}</div>
           </div>`).join('')}
       </div>
       <div class="result-actions">
-        <a class="btn" href="${CONSOLE('quiz_result_' + score)}" target="_blank" rel="noopener" data-track="cta_console_quiz">شروع روی لیارا</a>
+        <a class="btn" href="${L.auth}" data-track="quiz_result_${score}">ثبت‌نام و شروع روی لیارا</a>
         <button class="btn btn-ghost" id="copy-kit">کپی کیت ادامه</button>
         <button class="btn btn-ghost" id="restart">دوباره</button>
       </div>
-      <p class="disclaimer">این امتیاز آموزشی و برای شروع گفت‌وگوست؛ ارزیابی تخصصی یا تضمین دسترس‌پذیری نیست. سناریوی واقعی کارت رو حتماً تست کن.</p>`;
+      <p class="disclaimer">این امتیاز یک خودارزیابی سریعه؛ ارزیابی تخصصی یا تضمین دسترس‌پذیری نیست. سناریوی واقعی کارت رو حتماً تست کن.</p>`;
+    decorate(stage);
     $('#copy-kit').addEventListener('click', (e) => { copyText(kitText, e.currentTarget); track('kit_copy'); });
     $('#restart').addEventListener('click', () => { answers = []; renderQ(0); });
     track('quiz_complete', { score, biz });
@@ -252,4 +288,5 @@
 
   // Business choice also tailors the quiz result.
   renderQ(0);
+  decorate();
 })();

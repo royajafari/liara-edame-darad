@@ -179,3 +179,19 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
   .nav, .hero, #recap, #solutions, #business, .section:not(#quiz), .footer, .result-actions, .quiz-progress { display: none !important; }
   body, .section-alt, .quiz, .kit-item { background: #fff !important; color: #000 !important; }
 }
+
+/* Liara gateway links */
+.nav-actions { display: flex; align-items: center; gap: 18px; }
+.nav-login { color: var(--ice); text-decoration: none; font-weight: 700; font-size: 15px; }
+.nav-login:hover { color: var(--teal-300); }
+.chips a { color: inherit; text-decoration: none; }
+.chips li:hover { background: rgba(19,184,166,.12); }
+.link-more { display: inline-block; margin-top: 10px; }
+.biz-link { display: block; font-weight: 800; text-decoration: none; color: var(--ice); }
+.biz-link:hover { color: var(--teal-300); }
+.biz-col .link-more { margin-top: 18px; font-size: 15px; }
+.faq p a { font-weight: 700; text-decoration: none; white-space: nowrap; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.footer-links a { color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--teal-300); }
+@media (max-width: 560px) { .nav-login { display: none; } }

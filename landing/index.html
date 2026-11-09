@@ -7,7 +7,9 @@
 <meta name="description" content="کار تو حتی وسط قطعی اینترنت بین‌الملل هم می‌تونه ادامه پیدا کنه: میرورهای ایرانی، زیرساخت داخل ایران و یک تست آمادگی ۲ دقیقه‌ای.">
 <meta property="og:title" content="ادامه دارد… — اینترنت ممکنه قطع بشه، مسیرت نه.">
 <meta property="og:description" content="تست آمادگی ۲ دقیقه‌ای و کیت ادامه‌ی مخصوص کار تو، با راهکارهای لیارا.">
-<meta property="og:image" content="../linkedin/linkedin-cover.png">
+<meta property="og:image" content="https://royajafari.github.io/liara-edame-darad/linkedin/linkedin-cover.png">
+<meta property="og:url" content="https://royajafari.github.io/liara-edame-darad/landing/">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#141D35">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/campaign.css">
@@ -26,7 +28,10 @@
       <a href="#business">کسب‌وکار تو</a>
       <a href="#faq">سؤال‌ها</a>
     </nav>
-    <a href="#quiz" class="btn btn-sm" data-track="nav_quiz">تست آمادگی</a>
+    <div class="nav-actions">
+      <a href="https://console.liara.ir/auth" class="nav-login" data-track="nav_login">ورود / ثبت‌نام</a>
+      <a href="#quiz" class="btn btn-sm" data-track="nav_quiz">تست آمادگی</a>
+    </div>
   </div>
 </header>
 
@@ -94,27 +99,30 @@
           <div class="bar"><i></i><i></i><i></i><span id="code-title">terminal</span><button class="copy" id="copy-btn" data-track="copy_command">کپی</button></div>
           <pre id="code-box"></pre>
         </div>
-        <ul class="chips" aria-label="مخزن‌های پشتیبانی‌شده"><li>npm</li><li>PyPI</li><li>Docker Hub</li><li>Composer</li><li>Go</li><li>NuGet</li><li>GitHub</li><li>Ubuntu</li><li>Debian</li><li>Alpine</li><li>Fedora</li><li>Arch</li></ul>
-        <a class="link-more" href="https://liara.ir/mirrors/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_mirrors">راهنمای کامل میرورها ←</a>
+        <a class="link-more" id="cmd-guide" href="https://liara.ir/mirrors/npm/" data-track="out_mirror_cmd">راهنمای میرور npm در لیارا ←</a>
+        <ul class="chips" aria-label="مخزن‌های پشتیبانی‌شده">
+          <li><a href="https://liara.ir/mirrors/npm/" data-track="mirror_npm">npm</a></li><li><a href="https://liara.ir/mirrors/pypi/" data-track="mirror_pypi">PyPI</a></li><li><a href="https://liara.ir/mirrors/docker/" data-track="mirror_docker">Docker Hub</a></li><li><a href="https://liara.ir/mirrors/composer/" data-track="mirror_composer">Composer</a></li><li><a href="https://liara.ir/mirrors/go/" data-track="mirror_go">Go</a></li><li><a href="https://liara.ir/mirrors/nuget/" data-track="mirror_nuget">NuGet</a></li><li><a href="https://liara.ir/mirrors/github/" data-track="mirror_github">GitHub</a></li><li><a href="https://liara.ir/mirrors/ubuntu/" data-track="mirror_ubuntu">Ubuntu</a></li><li><a href="https://liara.ir/mirrors/debian/" data-track="mirror_debian">Debian</a></li><li><a href="https://liara.ir/mirrors/alpine/" data-track="mirror_alpine">Alpine</a></li><li><a href="https://liara.ir/mirrors/fedora/" data-track="mirror_fedora">Fedora</a></li><li><a href="https://liara.ir/mirrors/arch/" data-track="mirror_arch">Arch</a></li>
+        </ul>
+        <a class="link-more" href="https://liara.ir/mirrors/" data-track="out_mirrors">همه‌ی میرورهای لیارا ←</a>
       </div>
 
       <div class="step-block">
         <div class="step-head"><span class="step-n">۲</span><div><h3>کد، داده و فایل‌هات، کنار هم داخل ایران</h3><p>هرچی اپ برای اجرا لازم داره، روی دیتاسنترهای داخل ایران.</p></div></div>
         <div class="cards4">
-          <article class="pcard"><h4>پلتفرم (PaaS)</h4><p>استقرار Node، PHP، Python، Go، .NET و Docker با آپلود سورس؛ کمتر از ۵ دقیقه.</p></article>
-          <article class="pcard"><h4>دیتابیس ابری</h4><p>MySQL، PostgreSQL، MongoDB، Redis، SQL Server و…، کنار اپ.</p></article>
-          <article class="pcard"><h4>ذخیره‌سازی ابری</h4><p>آبجکت استوریج سازگار با <span class="lat">S3</span> برای فایل‌ها و رسانه‌ها.</p></article>
-          <article class="pcard"><h4>سرور مجازی ابری</h4><p>کنترل کامل روی محیط؛ همه‌ی پلن‌ها با موقعیت ایران.</p></article>
+          <article class="pcard"><h4>پلتفرم (PaaS)</h4><p>استقرار Node، PHP، Python، Go، .NET و Docker با آپلود سورس؛ کمتر از ۵ دقیقه.</p><a href="https://docs.liara.ir/paas/about/" data-track="p_paas">آشنایی با پلتفرم ←</a></article>
+          <article class="pcard"><h4>دیتابیس ابری</h4><p>MySQL، PostgreSQL، MongoDB، Redis، SQL Server و…، کنار اپ.</p><a href="https://liara.ir/products/cloud-database/" data-track="p_db">دیتابیس ابری ←</a></article>
+          <article class="pcard"><h4>ذخیره‌سازی ابری</h4><p>آبجکت استوریج سازگار با <span class="lat">S3</span> برای فایل‌ها و رسانه‌ها.</p><a href="https://liara.ir/products/object-storage/" data-track="p_storage">ذخیره‌سازی ابری ←</a></article>
+          <article class="pcard"><h4>سرور مجازی ابری</h4><p>کنترل کامل روی محیط؛ همه‌ی پلن‌ها با موقعیت ایران.</p><a href="https://liara.ir/products/cloud-server/" data-track="p_vps">سرور مجازی ابری ←</a></article>
         </div>
       </div>
 
       <div class="step-block">
         <div class="step-head"><span class="step-n">۳</span><div><h3>آمادگی یعنی قبل از قطعی تمرین کنی</h3><p>یه روز رو «تمرین قطعی» بذار: اینترنت بین‌الملل رو فرضاً ببند و ببین کجای کار می‌لنگه.</p></div></div>
         <div class="cards4">
-          <article class="pcard"><h4>بکاپ رایگان</h4><p>تا ۱۰ برابر فضای پلن، داخل لیارا. یه بار هم بازیابی رو تست کن.</p></article>
-          <article class="pcard"><h4>DNS رایگان</h4><p>مدیریت دامنه کنار بقیه‌ی سرویس‌ها.</p></article>
-          <article class="pcard"><h4>ایمیل SMTP</h4><p>ایمیل‌های سیستمی اپ (تأیید، فاکتور) از زیرساخت داخلی.</p></article>
-          <article class="pcard"><h4>پرداخت ساعتی</h4><p>محیط آزمایشی بساز، تست کن، خاموشش کن؛ فقط به اندازه‌ی مصرف.</p></article>
+          <article class="pcard"><h4>بکاپ رایگان</h4><p>تا ۱۰ برابر فضای پلن، داخل لیارا. یه بار هم بازیابی رو تست کن.</p><a href="https://docs.liara.ir/paas/disks/restore-backup-using-ftp" data-track="p_backup">راهنمای بازیابی بکاپ ←</a></article>
+          <article class="pcard"><h4>DNS رایگان</h4><p>مدیریت دامنه کنار بقیه‌ی سرویس‌ها.</p><a href="https://liara.ir/products/dns/" data-track="p_dns">سامانه‌ی DNS ←</a></article>
+          <article class="pcard"><h4>ایمیل SMTP</h4><p>ایمیل‌های سیستمی اپ (تأیید، فاکتور) از زیرساخت داخلی.</p><a href="https://liara.ir/products/email/" data-track="p_email">سرویس ایمیل ←</a></article>
+          <article class="pcard"><h4>پرداخت ساعتی</h4><p>محیط آزمایشی بساز، تست کن، خاموشش کن؛ فقط به اندازه‌ی مصرف.</p><a href="https://liara.ir/pricing/" data-track="p_pricing">تعرفه‌ها ←</a></article>
         </div>
       </div>
     </div>
@@ -159,9 +167,9 @@
         <div><b>۲۴/۷</b><span>پایش سرویس‌ها، شبانه‌روز</span></div>
       </div>
       <div class="cards4 three">
-        <article class="pcard"><h4>مستندات فارسی</h4><p>راهنمای قدم‌به‌قدم میرورها، استقرار، دیتابیس و بکاپ.</p><a href="https://docs.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_docs">مستندات ←</a></article>
-        <article class="pcard"><h4>آموزش ویدیویی</h4><p>از اولین دیپلوی تا مهاجرت دیتابیس.</p><a href="https://docs.liara.ir/tv/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad" target="_blank" rel="noopener" data-track="out_tv">ویدیوها ←</a></article>
-        <article class="pcard"><h4>پشتیبانی</h4><p>تیمی که کنارته تا آمادگی رو از امروز بسازی.</p><a href="https://console.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad&utm_content=support" target="_blank" rel="noopener" data-track="out_support">ورود به کنسول ←</a></article>
+        <article class="pcard"><h4>مستندات فارسی</h4><p>راهنمای قدم‌به‌قدم میرورها، استقرار، دیتابیس و بکاپ.</p><a href="https://docs.liara.ir/" data-track="out_docs">مستندات لیارا ←</a></article>
+        <article class="pcard"><h4>آموزش ویدیویی</h4><p>از اولین دیپلوی تا مهاجرت دیتابیس.</p><a href="https://docs.liara.ir/tv/" data-track="out_tv">لیارا تی‌وی ←</a></article>
+        <article class="pcard"><h4>پشتیبانی</h4><p>تیمی که کنارته تا آمادگی رو از امروز بسازی؛ سؤالت رو در تیکت بپرس.</p><a href="https://console.liara.ir/tickets/create" data-track="out_support">ارسال تیکت ←</a></article>
       </div>
     </div>
   </section>
@@ -173,10 +181,10 @@
       <h2>سؤال‌هایی که <em>باید پرسید</em></h2>
       <div class="faq">
         <details><summary>یعنی با لیارا سایتم تو قطعی ۱۰۰٪ بالا می‌مونه؟</summary><p>نه؛ هیچ زیرساختی به‌تنهایی چنین تضمینی نمی‌ده. دسترسی کاربرها، درگاه پرداخت، پیامک، APIهای خارجی و هر وابستگی دیگه باید جدا بررسی و تست بشه. کاری که لیارا می‌کنه اینه که هسته‌ی کار تو (اپ، دیتابیس، فایل‌ها و پکیج‌ها) داخل ایران باشه تا وابستگی‌ات به اینترنت بین‌الملل کم بشه.</p></details>
-        <details><summary>میرورها به‌روزن؟</summary><p>میرور لیارا یک Proxy Cache است که با مخزن اصلی همگام می‌شه و طبق اعلام لیارا تقریباً همیشه هم‌تراز با منبع اصلیه. پکیجی که قبلاً کش شده، حتی وقتی منبع اصلی در دسترس نیست هم قابل دانلوده.</p></details>
+        <details><summary>میرورها به‌روزن؟</summary><p>میرور لیارا یک Proxy Cache است که با مخزن اصلی همگام می‌شه و طبق اعلام لیارا تقریباً همیشه هم‌تراز با منبع اصلیه. پکیجی که قبلاً کش شده، حتی وقتی منبع اصلی در دسترس نیست هم قابل دانلوده. <a href="https://docs.liara.ir/mirrors/about/" data-track="faq_mirrors">درباره‌ی میرورها در مستندات ←</a></p></details>
         <details><summary>API هوش مصنوعی لیارا هم تو قطعی کار می‌کنه؟</summary><p>این سرویس به مدل‌های ارائه‌دهنده‌های مختلف وصله و ما در این کمپین درباره‌ی دسترس‌پذیری‌اش در قطعی وعده‌ای نمی‌دیم. اگه کارت به هوش مصنوعی وابسته‌ست، اون رو هم جزو وابستگی‌های خارجی‌ات بنویس و براش سناریوی جایگزین بچین.</p></details>
-        <details><summary>هزینه‌ی امتحان کردن چقدره؟</summary><p>لیارا پرداخت ساعتی داره؛ یعنی می‌تونی یه محیط آزمایشی بسازی، «تمرین قطعی» رو اجرا کنی و بعد خاموشش کنی. DNS رایگانه و بکاپ هم تا ۱۰ برابر فضای پلن رایگانه. قیمت‌های به‌روز در صفحه‌ی تعرفه‌های لیارا.</p></details>
-        <details><summary>برای مهاجرت از سرور خارجی از کجا شروع کنم؟</summary><p>از تست آمادگی همین صفحه شروع کن تا اولویت‌ها مشخص بشه. بعد اول پکیج‌ها رو روی میرور ببر (ریسک صفر)، بعد یک نسخه‌ی آزمایشی از اپ و دیتابیس رو روی لیارا بالا بیار و با داده‌ی تستی امتحانش کن.</p></details>
+        <details><summary>هزینه‌ی امتحان کردن چقدره؟</summary><p>لیارا پرداخت ساعتی داره؛ یعنی می‌تونی یه محیط آزمایشی بسازی، «تمرین قطعی» رو اجرا کنی و بعد خاموشش کنی. DNS رایگانه و بکاپ هم تا ۱۰ برابر فضای پلن رایگانه. <a href="https://liara.ir/pricing/" data-track="faq_pricing">تعرفه‌های به‌روز لیارا ←</a></p></details>
+        <details><summary>برای مهاجرت از سرور خارجی از کجا شروع کنم؟</summary><p>از تست آمادگی همین صفحه شروع کن تا اولویت‌ها مشخص بشه. بعد اول پکیج‌ها رو روی میرور ببر (ریسک صفر)، بعد یک نسخه‌ی آزمایشی از اپ و دیتابیس رو روی لیارا بالا بیار و با داده‌ی تستی امتحانش کن. <a href="https://docs.liara.ir/references/cli/about/" data-track="faq_cli">استقرار با Liara CLI ←</a></p></details>
       </div>
     </div>
   </section>
@@ -188,8 +196,8 @@
       <h2>قسمت بعدی رو <em>خودت بنویس.</em></h2>
       <p class="section-lead">ثبت‌نام کن، اولین سرویس رو در کمتر از ۵ دقیقه بالا بیار و کار رو برای روزهای سخت آماده کن.</p>
       <div class="hero-cta center">
-        <a class="btn" href="https://console.liara.ir/?utm_source=edame-darad&utm_medium=landing&utm_campaign=edame-darad&utm_content=final" target="_blank" rel="noopener" data-track="cta_console_final">شروع روی لیارا</a>
-        <a class="btn btn-ghost" href="#quiz" data-track="final_quiz">اول تست آمادگی</a>
+        <a class="btn" href="https://console.liara.ir/auth" data-track="cta_console_final">ثبت‌نام و شروع روی لیارا</a>
+        <a class="btn btn-ghost" href="https://liara.ir/pricing/" data-track="final_pricing">دیدن تعرفه‌ها</a>
       </div>
     </div>
   </section>
@@ -197,8 +205,16 @@
 
 <footer class="footer">
   <div class="container footer-in">
-    <span>ادامه دارد <span class="dots"><i></i><i></i><i></i></span></span>
-    <span class="muted">پروژه‌ی کلاسی «کمپین بازاریابی و فروش» برای چالش کمپین لیارا؛ این صفحه وب‌سایت رسمی لیارا نیست. اطلاعات خدمات از <a href="https://liara.ir/" target="_blank" rel="noopener">liara.ir</a>.</span>
+    <span>ادامه دارد <span class="dots"><i></i><i></i><i></i></span> <span class="muted">کمپینی برای لیارا</span></span>
+    <nav class="footer-links" aria-label="لیارا">
+      <a href="https://liara.ir/" data-track="f_home">لیارا</a>
+      <a href="https://liara.ir/mirrors/" data-track="f_mirrors">میرورها</a>
+      <a href="https://docs.liara.ir/" data-track="f_docs">مستندات</a>
+      <a href="https://liara.ir/pricing/" data-track="f_pricing">تعرفه‌ها</a>
+      <a href="https://liara.ir/blog/" data-track="f_blog">وبلاگ</a>
+      <a href="https://liara.online/" data-track="f_status">وضعیت سرویس‌ها</a>
+      <a href="https://console.liara.ir/auth" data-track="f_auth">ورود / ثبت‌نام</a>
+    </nav>
   </div>
 </footer>
 
