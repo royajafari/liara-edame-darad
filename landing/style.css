@@ -215,13 +215,16 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 /* Win: the brick-style figure jumps in, throws its arms up, keeps waving */
 .win { position: absolute; left: calc(100% + 40px); bottom: 0; width: 170px; pointer-events: none; } /* beside the result, to its right */
 .win .fig { display: block; width: 100%; height: auto; overflow: visible; animation: fig-in .6s cubic-bezier(.2,.9,.3,1.2) both; }
-.win-badge { position: absolute; top: -40px; left: 50%; transform: translateX(-50%) rotate(-6deg); background: var(--amber); color: var(--navy-900); font-weight: 900; font-size: 18px; padding: 4px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 8px 24px rgba(246,185,76,.35); animation: badge-in .4s 1s cubic-bezier(.2,.9,.3,1.4) both; z-index: 1; }
+.win-badge { position: absolute; top: -66px; left: 50%; transform: translateX(-50%) rotate(-6deg); background: var(--amber); color: var(--navy-900); font-weight: 900; font-size: 18px; padding: 4px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 8px 24px rgba(246,185,76,.35); animation: badge-in .4s 1s cubic-bezier(.2,.9,.3,1.4) both; z-index: 1; }
 .fig * { transform-box: view-box; }
 .fig .fig-shadow { fill: rgba(0,0,0,.35); transform-origin: 85px 222px; }
 .fig .eye { transform-origin: 85px 40px; animation: eye-blink 3.6s 2s infinite; }
 /* win: arms up, three jumps, then waving */
-.fig-win .arm-l { transform-origin: 48px 82px; transform: rotate(150deg); animation: arm-l-up .35s .55s ease-out both; }
-.fig-win .arm-r { transform-origin: 122px 82px; transform: rotate(-150deg); animation: arm-r-up .35s .55s ease-out both, wave .7s 2.2s ease-in-out infinite; }
+.fig-win .arm-l { transform-origin: 48px 82px; transform: rotate(165deg); animation: arm-l-up .35s .55s ease-out both, pump-l .6s 2.2s ease-in-out infinite; }
+.fig-win .arm-r { transform-origin: 122px 82px; transform: rotate(-165deg); animation: arm-r-up .35s .55s ease-out both, pump-r .6s 2.2s ease-in-out infinite; }
+.fig-win .aura { transform-origin: 85px 100px; animation: aura 1.4s .5s ease-in-out infinite alternate both; }
+.fig-win .hair { filter: drop-shadow(0 0 5px rgba(95,224,209,.75)); }
+@keyframes aura { from { transform: scale(.7); opacity: .25; } to { transform: scale(1.06); opacity: 1; } }
 .fig-win .fig-body { animation: jump .45s .9s ease-in-out 3; }
 .fig-win .fig-shadow { animation: shadow .45s .9s ease-in-out 3; }
 /* lose: sits, sobs, tears fly, a puddle spreads */
@@ -258,9 +261,10 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 @keyframes bob { to { transform: translateY(-4px); } }
 @keyframes fig-in { from { transform: translateY(115%); } 70% { transform: translateY(-5%); } to { transform: none; } }
 @keyframes badge-in { from { opacity: 0; transform: translateX(-50%) scale(.3) rotate(-6deg); } to { opacity: 1; transform: translateX(-50%) rotate(-6deg); } }
-@keyframes arm-l-up { from { transform: rotate(0); } to { transform: rotate(150deg); } }
-@keyframes arm-r-up { from { transform: rotate(0); } to { transform: rotate(-150deg); } }
-@keyframes wave { 0%, 100% { transform: rotate(-150deg); } 50% { transform: rotate(-118deg); } }
+@keyframes arm-l-up { from { transform: rotate(0); } to { transform: rotate(165deg); } }
+@keyframes arm-r-up { from { transform: rotate(0); } to { transform: rotate(-165deg); } }
+@keyframes pump-l { 0%, 100% { transform: rotate(165deg); } 50% { transform: rotate(150deg); } }
+@keyframes pump-r { 0%, 100% { transform: rotate(-165deg); } 50% { transform: rotate(-150deg); } }
 @keyframes jump { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-24px); } }
 @keyframes shadow { 0%, 100% { transform: scaleX(1); } 45% { transform: scaleX(.65); } }
 @keyframes eye-blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
@@ -268,8 +272,8 @@ h4 { font-weight: 800; font-size: 19px; margin: 0 0 6px; }
 .confetti i { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation-name: fall; animation-timing-function: linear; animation-fill-mode: both; }
 @keyframes fall { from { transform: translateY(0) rotate(0); } to { transform: translateY(640px) rotate(var(--r)); } }
 @media (max-width: 980px) {
-  .win { position: relative; left: auto; bottom: auto; width: 92px; margin: 26px auto 0; }
-  .win-badge { font-size: 14px; padding: 2px 12px; top: -26px; }
+  .win { position: relative; left: auto; bottom: auto; width: 92px; margin: 40px auto 0; }
+  .win-badge { font-size: 14px; padding: 2px 12px; top: -40px; }
 }
 .motion .game-overlay:not([hidden]) .go-in { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
 @media (max-width: 560px) {

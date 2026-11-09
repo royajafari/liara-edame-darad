@@ -281,7 +281,7 @@
         <button class="btn" id="game-start">شروع بازی</button>
         <small>روی دسکتاپ کلیدهای ۱ تا ۸ هم کار می‌کنن.</small>
       </div>
-      <div class="walker" aria-hidden="true"><div class="walk">${FIG_WALK}</div></div>`;
+      <div class="walker" aria-hidden="true"><div class="walk">${FIG_WALK()}</div></div>`;
     overlay.querySelector('#game-start').addEventListener('click', start);
     kick();
   };
@@ -294,79 +294,92 @@
     kick();
     cv.focus?.();
   };
-  /* ---------- End of game: an original brick-style figure ----------
-     score ≥ WIN: jumps in, arms up, waves, confetti.
-     score < WIN: sits on the ground and cries; a puddle spreads around it. */
+  /* ---------- The campaign hero: an original brick-style martial-arts figure ----------
+     Spiky amber hair with glowing teal tips, teal gi, navy belt and wristbands,
+     «ادامه دارد…» three-dot emblem. Three scenes:
+       walk  – start screen, paces left and right;
+       win   – score ≥ WIN: fists up, teal aura, confetti;
+       lose  – score < WIN: hair droops, sits and cries, a puddle spreads. */
   const WIN = 80;
-  const SKIN = '#F3C79B', SKIN2 = '#E2B486', HAIR = '#3B2A20', INK = '#141D35';
-  // Head with hair; `face` is the expression, `dy` shifts it down (sitting pose).
-  const head = (face, dy = 0) => `
+  const SKIN = '#F3C79B', SKIN2 = '#E2B486', INK = '#141D35', GI = '#13B8A6', GI2 = '#0E8578', NAVY = '#24304F', BELT = '#1C2848';
+  let uid = 0;
+  const HAIR_UP = (id) => `
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FE0D1"/><stop offset=".32" stop-color="#F6B94C"/><stop offset="1" stop-color="#E39A2D"/></linearGradient></defs>
+    <path class="hair" fill="url(#${id})" stroke="#C9801F" stroke-width="2" stroke-linejoin="round" d="M53 40 L36 32 L52 26 L33 6 L58 11 L52 -12 L73 4 L80 -24 L90 2 L106 -16 L106 6 L130 -4 L117 18 L136 21 L117 28 L118 40 L111 30 L104 25 L98 32 L92 23 L85 31 L78 23 L71 31 L65 25 L59 33 Z"/>`;
+  const HAIR_DOWN = (id) => `
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FC9C4"/><stop offset=".3" stop-color="#D2A456"/><stop offset="1" stop-color="#B98436"/></linearGradient></defs>
+    <path class="hair" fill="url(#${id})" stroke="#9A6B25" stroke-width="2" stroke-linejoin="round" d="M53 52 C48 20 66 6 86 6 C106 6 124 20 117 52 L112 60 L108 34 L101 31 L95 35 L89 29 L83 35 L77 29 L71 35 L65 31 L62 34 L59 60 Z"/>`;
+  const head = (face, hair, dy = 0) => `
     <g transform="translate(0 ${dy})">
       <rect x="76" y="62" width="18" height="14" rx="3" fill="${SKIN2}"/>
       <rect x="58" y="16" width="54" height="50" rx="14" fill="${SKIN}"/>
-      <path d="M54 44 C49 15 68 3 86 4 C106 5 122 16 116 44 C113 33 106 25 95 23 C87 31 72 32 61 27 C58 32 56 38 54 44 Z" fill="${HAIR}"/>
-      <path d="M95 23 C99 15 108 13 112 17" stroke="#5A4232" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
-      <circle cx="66" cy="50" r="4" fill="#F06A6A" opacity=".35"/><circle cx="104" cy="50" r="4" fill="#F06A6A" opacity=".35"/>
+      <circle cx="65" cy="52" r="4" fill="#F06A6A" opacity=".3"/><circle cx="105" cy="52" r="4" fill="#F06A6A" opacity=".3"/>
       ${face}
+      ${hair(`hair${++uid}`)}
     </g>`;
-  const HAPPY = `
-    <ellipse class="eye" cx="74" cy="40" rx="4" ry="5" fill="${INK}"/><ellipse class="eye" cx="96" cy="40" rx="4" ry="5" fill="${INK}"/>
-    <path d="M70 49 Q85 63 100 49" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  const SAD = `
-    <path d="M68 41 Q74 36 80 41" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <path d="M90 41 Q96 36 102 41" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <path d="M66 33 L79 30 M104 33 L91 30" stroke="${HAIR}" stroke-width="3" stroke-linecap="round"/>
-    <ellipse class="wail" cx="85" cy="54" rx="8" ry="6" fill="${INK}"/><ellipse cx="85" cy="57" rx="4.5" ry="2.5" fill="#F06A6A"/>
-    <g transform="translate(74 44)"><path class="tear tl" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>
-    <g transform="translate(96 44)"><path class="tear tr" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>`;
-  const SHIRT = (y) => `
-    <path d="M54 ${y} H116 L124 ${y + 64} H46 Z" fill="#13B8A6"/>
-    <path d="M54 ${y} H116 L117 ${y + 8} H53 Z" fill="#5FE0D1" opacity=".55"/>
-    <circle cx="74" cy="${y + 32}" r="5" fill="#0B1224" opacity=".5"/><circle cx="86" cy="${y + 32}" r="5" fill="#0B1224" opacity=".5"/><circle cx="98" cy="${y + 32}" r="5" fill="#F4F7FB"/>`;
+  const brows = (l, r) => `<path d="${l} ${r}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" fill="none"/>`;
+  const FACE_READY = `${brows('M66 33 L80 37', 'M104 33 L90 37')}
+    <ellipse class="eye" cx="74" cy="43" rx="3.6" ry="4.6" fill="${INK}"/><ellipse class="eye" cx="96" cy="43" rx="3.6" ry="4.6" fill="${INK}"/>
+    <path d="M74 52 H96 Q95 60 85 60 Q75 60 74 52 Z" fill="#fff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M75 55.5 H95" stroke="${INK}" stroke-width="1.5"/>`;
+  const FACE_WIN = `${brows('M66 32 Q73 27 80 32', 'M90 32 Q97 27 104 32')}
+    <ellipse class="eye" cx="74" cy="42" rx="3.6" ry="4.6" fill="${INK}"/><ellipse class="eye" cx="96" cy="42" rx="3.6" ry="4.6" fill="${INK}"/>
+    <path d="M70 50 Q85 68 100 50 Z" fill="${INK}"/><path d="M72 51 H98 L96 55 H74 Z" fill="#fff"/><ellipse cx="85" cy="61" rx="6" ry="2.5" fill="#F06A6A"/>`;
+  const TEAR = 'M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z';
+  const FACE_SAD = `${brows('M66 35 L79 31', 'M104 35 L91 31')}
+    <path d="M68 43 Q74 38 80 43 M90 43 Q96 38 102 43" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse class="wail" cx="85" cy="56" rx="8" ry="6" fill="${INK}"/><ellipse cx="85" cy="59" rx="4.5" ry="2.5" fill="#F06A6A"/>
+    <g transform="translate(74 46)"><path class="tear tl" d="${TEAR}"/><path class="tear tl d2" d="${TEAR}"/><path class="tear tl d3" d="${TEAR}"/></g>
+    <g transform="translate(96 46)"><path class="tear tr" d="${TEAR}"/><path class="tear tr d2" d="${TEAR}"/><path class="tear tr d3" d="${TEAR}"/></g>`;
+  // Gi top with V-neck, emblem and knotted belt; y = shoulder line.
+  const GI_TOP = (y) => `
+    <path d="M54 ${y} H116 L124 ${y + 64} H46 Z" fill="${GI}"/>
+    <path d="M68 ${y} L85 ${y + 24} L102 ${y} Z" fill="${NAVY}"/>
+    <path d="M66 ${y} L85 ${y + 26} L104 ${y}" stroke="${GI2}" stroke-width="3" fill="none" stroke-linejoin="round"/>
+    <path d="M58 ${y + 30} Q66 ${y + 38} 62 ${y + 48} M112 ${y + 30} Q104 ${y + 38} 108 ${y + 48}" stroke="${GI2}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
+    <circle cx="103" cy="${y + 33}" r="9" fill="#F4F7FB"/>
+    <circle cx="98.5" cy="${y + 33}" r="2.2" fill="${NAVY}"/><circle cx="103" cy="${y + 33}" r="2.2" fill="${NAVY}"/><circle cx="107.5" cy="${y + 33}" r="2.2" fill="${GI}"/>
+    <rect x="46" y="${y + 52}" width="78" height="10" rx="3" fill="${BELT}"/>
+    <path d="M83 ${y + 60} L75 ${y + 86} L82 ${y + 87} L87 ${y + 62} Z M87 ${y + 60} L95 ${y + 86} L88 ${y + 87} L83 ${y + 62} Z" fill="${BELT}"/>
+    <rect x="79" y="${y + 49}" width="12" height="15" rx="4" fill="#111A30"/>`;
   const arm = (side, y) => {
     const x = side === 'l' ? 40 : 114, hx = side === 'l' ? 48 : 122;
-    return `<g class="arm arm-${side}"><rect x="${x}" y="${y + 4}" width="16" height="44" rx="7" fill="#13B8A6"/><circle cx="${hx}" cy="${y + 52}" r="9" fill="${SKIN}"/></g>`;
+    return `<g class="arm arm-${side}"><rect x="${x}" y="${y + 4}" width="16" height="42" rx="7" fill="${GI}"/><rect x="${x - 1}" y="${y + 36}" width="18" height="9" rx="3" fill="${BELT}"/><circle cx="${hx}" cy="${y + 52}" r="9" fill="${SKIN}"/></g>`;
   };
-  const FIG_WIN = `
-    <svg class="fig fig-win" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
-      <ellipse class="fig-shadow" cx="85" cy="222" rx="46" ry="6"/>
-      <g class="fig-body">
-        ${arm('l', 74)}${arm('r', 74)}${SHIRT(74)}${head(HAPPY)}
-        <rect x="44" y="136" width="82" height="14" rx="4" fill="#1C2848"/>
-        <rect x="46" y="148" width="37" height="58" rx="5" fill="#24304F"/><rect x="87" y="148" width="37" height="58" rx="5" fill="#24304F"/>
-        <rect x="44" y="202" width="41" height="14" rx="5" fill="${INK}"/><rect x="85" y="202" width="41" height="14" rx="5" fill="${INK}"/>
-      </g>
-      <g><rect x="128" y="186" width="38" height="24" rx="3" fill="#24304F" stroke="#13B8A6" stroke-width="2"/><rect x="122" y="210" width="50" height="6" rx="3" fill="#13B8A6"/><path d="M137 199 l5 5 l10 -11" stroke="#5FE0D1" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  const LEGS = `
+    <rect x="44" y="136" width="82" height="14" rx="4" fill="${NAVY}"/>
+    <g class="leg leg-l"><rect x="46" y="146" width="37" height="58" rx="5" fill="${NAVY}"/><rect x="44" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
+    <g class="leg leg-r"><rect x="87" y="146" width="37" height="58" rx="5" fill="${NAVY}"/><rect x="85" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>`;
+  const BASE = `<ellipse class="fig-shadow" cx="85" cy="226" rx="58" ry="5"/><rect x="34" y="212" width="102" height="12" rx="4" fill="#3A4A70"/><rect x="34" y="212" width="102" height="4" rx="2" fill="#4D5E88"/>`;
+  const FIG_WALK = () => `
+    <svg class="fig fig-walk" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+      <ellipse class="fig-shadow" cx="85" cy="222" rx="40" ry="5"/>
+      <g class="fig-body">${LEGS}${arm('l', 74)}${arm('r', 74)}${GI_TOP(74)}${head(FACE_READY, HAIR_UP)}</g>
     </svg>`;
-  const FIG_LOSE = `
+  const FIG_WIN = () => `
+    <svg class="fig fig-win" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+      <defs><radialGradient id="aura${++uid}"><stop offset=".35" stop-color="rgba(95,224,209,.55)"/><stop offset="1" stop-color="rgba(19,184,166,0)"/></radialGradient></defs>
+      <ellipse class="aura" cx="85" cy="100" rx="92" ry="128" fill="url(#aura${uid})"/>
+      ${BASE}
+      <g class="fig-body">${LEGS}${arm('l', 74)}${arm('r', 74)}${GI_TOP(74)}${head(FACE_WIN, HAIR_UP)}</g>
+      <g><rect x="140" y="194" width="30" height="20" rx="3" fill="${NAVY}" stroke="${GI}" stroke-width="2"/><rect x="136" y="214" width="38" height="5" rx="2.5" fill="${GI}"/><path d="M147 204 l4 4 l8 -9" stroke="#5FE0D1" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    </svg>`;
+  const FIG_LOSE = () => `
     <svg class="fig fig-lose" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
       <g class="puddle"><ellipse cx="85" cy="212" rx="104" ry="15" fill="rgba(79,163,224,.45)"/><ellipse cx="85" cy="212" rx="104" ry="15" fill="none" stroke="rgba(124,196,242,.7)" stroke-width="2"/><ellipse cx="52" cy="208" rx="30" ry="3.5" fill="rgba(200,232,252,.55)"/><ellipse cx="128" cy="216" rx="16" ry="2.5" fill="rgba(200,232,252,.4)"/></g>
       <ellipse class="ripple" cx="85" cy="212" rx="40" ry="6"/>
       <ellipse class="ripple r2" cx="85" cy="212" rx="40" ry="6"/>
       <g class="fig-body">
-        ${arm('l', 104)}${arm('r', 104)}${SHIRT(104)}
-        <rect x="44" y="166" width="82" height="12" rx="4" fill="#1C2848"/>
-        <rect x="46" y="176" width="37" height="18" rx="4" fill="#24304F"/><rect x="87" y="176" width="37" height="18" rx="4" fill="#24304F"/>
+        ${arm('l', 104)}${arm('r', 104)}${GI_TOP(104)}
+        <rect x="46" y="176" width="37" height="18" rx="4" fill="${NAVY}"/><rect x="87" y="176" width="37" height="18" rx="4" fill="${NAVY}"/>
         <rect x="40" y="190" width="45" height="18" rx="7" fill="${INK}"/><rect x="85" y="190" width="45" height="18" rx="7" fill="${INK}"/>
-        <g class="sob">${head(SAD, 30)}</g>
+        <g class="sob">${head(FACE_SAD, HAIR_DOWN, 30)}</g>
       </g>
-      <g class="fig-laptop-off"><rect x="132" y="182" width="34" height="22" rx="3" fill="#24304F" stroke="#F06A6A" stroke-width="2"/><rect x="127" y="204" width="44" height="5" rx="2.5" fill="#3A4A70"/><path d="M144 188 l10 10 M154 188 l-10 10" stroke="#F06A6A" stroke-width="3" stroke-linecap="round"/></g>
-    </svg>`;
-  // Start screen: the same figure walks left and right along the bottom.
-  const FIG_WALK = `
-    <svg class="fig fig-walk" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
-      <ellipse class="fig-shadow" cx="85" cy="222" rx="40" ry="5"/>
-      <g class="fig-body">
-        <g class="leg leg-l"><rect x="46" y="146" width="37" height="58" rx="5" fill="#24304F"/><rect x="44" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
-        <g class="leg leg-r"><rect x="87" y="146" width="37" height="58" rx="5" fill="#24304F"/><rect x="85" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
-        <rect x="44" y="136" width="82" height="14" rx="4" fill="#1C2848"/>
-        ${arm("l", 74)}${arm("r", 74)}${SHIRT(74)}${head(HAPPY)}
-      </g>
+      <g><rect x="134" y="184" width="32" height="21" rx="3" fill="${NAVY}" stroke="#F06A6A" stroke-width="2"/><rect x="129" y="205" width="42" height="5" rx="2.5" fill="#3A4A70"/><path d="M145 190 l10 10 M155 190 l-10 10" stroke="#F06A6A" stroke-width="3" stroke-linecap="round"/></g>
     </svg>`;
   const endScene = (win) => {
     const wrap = document.createElement('div');
     wrap.className = `win ${win ? 'is-win' : 'is-lose'}`;
-    wrap.innerHTML = `<div class="win-badge">${win ? 'بردی!' : 'ای وای…'}</div>${win ? FIG_WIN : FIG_LOSE}`;
+    wrap.innerHTML = `<div class="win-badge">${win ? 'بردی!' : 'ای وای…'}</div>${win ? FIG_WIN() : FIG_LOSE()}`;
     overlay.querySelector('.go-in').prepend(wrap);
     if (reduced || !win) return;
     const colors = [C.teal, C.teal3, C.amber, C.ice];
