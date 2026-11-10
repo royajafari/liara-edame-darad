@@ -294,88 +294,108 @@
     kick();
     cv.focus?.();
   };
-  /* ---------- The campaign hero: an original brick-style martial-arts figure ----------
-     Spiky amber hair with glowing teal tips, teal gi, navy belt and wristbands,
-     «ادامه دارد…» three-dot emblem. Three scenes:
-       walk  – start screen, paces left and right;
-       win   – score ≥ WIN: fists up, teal aura, confetti;
-       lose  – score < WIN: hair droops, sits and cries, a puddle spreads. */
+  /* ---------- The campaign robot: an original chibi mascot ----------
+     Big glossy head, small round body, large sparkling teal eyes on a dark visor,
+     a tiny amber moon floating over its antenna, and the «ادامه دارد…» dots on its chest.
+     Colours are the campaign's own (pearl white, teal, navy, amber).
+       walk – start screen: three-quarter view, rolls left/right on two wheels and turns at each end;
+       win  – score ≥ WIN: ^^ eyes, open smile, arms up, spins and hops, hearts and sparkles;
+       lose – score < WIN: big watery eyes, sits down and cries; a puddle spreads. */
   const WIN = 80;
-  const SKIN = '#F3C79B', SKIN2 = '#E2B486', INK = '#141D35', GI = '#13B8A6', GI2 = '#0E8578', NAVY = '#24304F', BELT = '#1C2848';
   let uid = 0;
-  const HAIR_UP = (id) => `
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FE0D1"/><stop offset=".32" stop-color="#F6B94C"/><stop offset="1" stop-color="#E39A2D"/></linearGradient></defs>
-    <path class="hair" fill="url(#${id})" stroke="#C9801F" stroke-width="2" stroke-linejoin="round" d="M53 40 L36 32 L52 26 L33 6 L58 11 L52 -12 L73 4 L80 -24 L90 2 L106 -16 L106 6 L130 -4 L117 18 L136 21 L117 28 L118 40 L111 30 L104 25 L98 32 L92 23 L85 31 L78 23 L71 31 L65 25 L59 33 Z"/>`;
-  const HAIR_DOWN = (id) => `
-    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FC9C4"/><stop offset=".3" stop-color="#D2A456"/><stop offset="1" stop-color="#B98436"/></linearGradient></defs>
-    <path class="hair" fill="url(#${id})" stroke="#9A6B25" stroke-width="2" stroke-linejoin="round" d="M53 52 C48 20 66 6 86 6 C106 6 124 20 117 52 L112 60 L108 34 L101 31 L95 35 L89 29 L83 35 L77 29 L71 35 L65 31 L62 34 L59 60 Z"/>`;
-  const head = (face, hair, dy = 0) => `
-    <g transform="translate(0 ${dy})">
-      <rect x="76" y="62" width="18" height="14" rx="3" fill="${SKIN2}"/>
-      <rect x="58" y="16" width="54" height="50" rx="14" fill="${SKIN}"/>
-      <circle cx="65" cy="52" r="4" fill="#F06A6A" opacity=".3"/><circle cx="105" cy="52" r="4" fill="#F06A6A" opacity=".3"/>
-      ${face}
-      ${hair(`hair${++uid}`)}
+  const DEFS = (n) => `
+    <defs>
+      <linearGradient id="shell${n}" x1=".2" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#EEF2F9"/><stop offset="1" stop-color="#C3CDE0"/></linearGradient>
+      <linearGradient id="shellD${n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D5DCEA"/><stop offset="1" stop-color="#A7B3CB"/></linearGradient>
+      <radialGradient id="visor${n}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#22325E"/><stop offset=".7" stop-color="#101A36"/><stop offset="1" stop-color="#0A1022"/></radialGradient>
+      <radialGradient id="iris${n}" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#9BF3E9"/><stop offset=".55" stop-color="#2FD3C1"/><stop offset="1" stop-color="#0E8F82"/></radialGradient>
+      <radialGradient id="irisSad${n}" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#C8E9FF"/><stop offset=".55" stop-color="#6FB8F0"/><stop offset="1" stop-color="#2F6FB0"/></radialGradient>
+      <radialGradient id="aura${n}"><stop offset=".3" stop-color="rgba(95,224,209,.45)"/><stop offset="1" stop-color="rgba(19,184,166,0)"/></radialGradient>
+      <filter id="glow${n}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="soft${n}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+    </defs>`;
+  // One big glossy eye: iris, pupil, two sparkles, and a lash at the outer corner.
+  const eye = (n, cx, cy, outer, sad) => `
+    <g class="eye">
+      <ellipse cx="${cx}" cy="${cy}" rx="13" ry="16" fill="url(#${sad ? 'irisSad' : 'iris'}${n})"/>
+      <ellipse cx="${cx + 1}" cy="${cy + 2}" rx="6.5" ry="8.5" fill="#0A1022" opacity=".85"/>
+      <circle cx="${cx - 4.5}" cy="${cy - 6}" r="4.6" fill="#fff"/><circle cx="${cx + 4}" cy="${cy + 6}" r="2" fill="#fff" opacity=".9"/>
+      <path d="M${cx + outer * 9} ${cy - 13} l${outer * 6} -5 M${cx + outer * 12} ${cy - 8} l${outer * 6} -2" stroke="#9BF3E9" stroke-width="2.4" stroke-linecap="round"/>
+      ${sad ? `<path d="M${cx - 12} ${cy + 9} Q${cx} ${cy + 18} ${cx + 12} ${cy + 9}" fill="#C8E9FF" opacity=".55"/>` : ''}
     </g>`;
-  const brows = (l, r) => `<path d="${l} ${r}" stroke="${INK}" stroke-width="3.5" stroke-linecap="round" fill="none"/>`;
-  const FACE_READY = `${brows('M66 33 L80 37', 'M104 33 L90 37')}
-    <ellipse class="eye" cx="74" cy="43" rx="3.6" ry="4.6" fill="${INK}"/><ellipse class="eye" cx="96" cy="43" rx="3.6" ry="4.6" fill="${INK}"/>
-    <path d="M74 52 H96 Q95 60 85 60 Q75 60 74 52 Z" fill="#fff" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M75 55.5 H95" stroke="${INK}" stroke-width="1.5"/>`;
-  const FACE_WIN = `${brows('M66 32 Q73 27 80 32', 'M90 32 Q97 27 104 32')}
-    <ellipse class="eye" cx="74" cy="42" rx="3.6" ry="4.6" fill="${INK}"/><ellipse class="eye" cx="96" cy="42" rx="3.6" ry="4.6" fill="${INK}"/>
-    <path d="M70 50 Q85 68 100 50 Z" fill="${INK}"/><path d="M72 51 H98 L96 55 H74 Z" fill="#fff"/><ellipse cx="85" cy="61" rx="6" ry="2.5" fill="#F06A6A"/>`;
-  const TEAR = 'M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z';
-  const FACE_SAD = `${brows('M66 35 L79 31', 'M104 35 L91 31')}
-    <path d="M68 43 Q74 38 80 43 M90 43 Q96 38 102 43" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-    <ellipse class="wail" cx="85" cy="56" rx="8" ry="6" fill="${INK}"/><ellipse cx="85" cy="59" rx="4.5" ry="2.5" fill="#F06A6A"/>
-    <g transform="translate(74 46)"><path class="tear tl" d="${TEAR}"/><path class="tear tl d2" d="${TEAR}"/><path class="tear tl d3" d="${TEAR}"/></g>
-    <g transform="translate(96 46)"><path class="tear tr" d="${TEAR}"/><path class="tear tr d2" d="${TEAR}"/><path class="tear tr d3" d="${TEAR}"/></g>`;
-  // Gi top with V-neck, emblem and knotted belt; y = shoulder line.
-  const GI_TOP = (y) => `
-    <path d="M54 ${y} H116 L124 ${y + 64} H46 Z" fill="${GI}"/>
-    <path d="M68 ${y} L85 ${y + 24} L102 ${y} Z" fill="${NAVY}"/>
-    <path d="M66 ${y} L85 ${y + 26} L104 ${y}" stroke="${GI2}" stroke-width="3" fill="none" stroke-linejoin="round"/>
-    <path d="M58 ${y + 30} Q66 ${y + 38} 62 ${y + 48} M112 ${y + 30} Q104 ${y + 38} 108 ${y + 48}" stroke="${GI2}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
-    <circle cx="103" cy="${y + 33}" r="9" fill="#F4F7FB"/>
-    <circle cx="98.5" cy="${y + 33}" r="2.2" fill="${NAVY}"/><circle cx="103" cy="${y + 33}" r="2.2" fill="${NAVY}"/><circle cx="107.5" cy="${y + 33}" r="2.2" fill="${GI}"/>
-    <rect x="46" y="${y + 52}" width="78" height="10" rx="3" fill="${BELT}"/>
-    <path d="M83 ${y + 60} L75 ${y + 86} L82 ${y + 87} L87 ${y + 62} Z M87 ${y + 60} L95 ${y + 86} L88 ${y + 87} L83 ${y + 62} Z" fill="${BELT}"/>
-    <rect x="79" y="${y + 49}" width="12" height="15" rx="4" fill="#111A30"/>`;
-  const arm = (side, y) => {
-    const x = side === 'l' ? 40 : 114, hx = side === 'l' ? 48 : 122;
-    return `<g class="arm arm-${side}"><rect x="${x}" y="${y + 4}" width="16" height="42" rx="7" fill="${GI}"/><rect x="${x - 1}" y="${y + 36}" width="18" height="9" rx="3" fill="${BELT}"/><circle cx="${hx}" cy="${y + 52}" r="9" fill="${SKIN}"/></g>`;
+  const FACES = {
+    happy: (n, dx) => `${eye(n, 66 + dx, 70, -1)}${eye(n, 104 + dx, 70, 1)}
+      <ellipse cx="${55 + dx}" cy="92" rx="7" ry="4" fill="#FF8FA3" opacity=".45"/><ellipse cx="${115 + dx}" cy="92" rx="7" ry="4" fill="#FF8FA3" opacity=".45"/>
+      <path d="M${78 + dx} 92 Q${85 + dx} 101 ${92 + dx} 92 Z" fill="#FF8FA3"/>`,
+    win: (n) => `<g stroke="#5FE0D1" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow${n})"><path d="M54 74 Q66 58 78 74"/><path d="M92 74 Q104 58 116 74"/></g>
+      <ellipse cx="55" cy="90" rx="8" ry="4.5" fill="#FF8FA3" opacity=".55"/><ellipse cx="115" cy="90" rx="8" ry="4.5" fill="#FF8FA3" opacity=".55"/>
+      <path d="M72 86 Q85 106 98 86 Z" fill="#0A1022" stroke="#5FE0D1" stroke-width="2"/><ellipse cx="85" cy="97" rx="6.5" ry="3.5" fill="#FF8FA3"/>`,
+    sad: (n) => `${eye(n, 66, 72, -1, true)}${eye(n, 104, 72, 1, true)}
+      <path d="M54 52 L72 47 M116 52 L98 47" stroke="#9BC9F0" stroke-width="3" stroke-linecap="round"/>
+      <path class="wail" d="M76 98 Q80 93 85 97 Q90 93 94 98" stroke="#9BC9F0" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g transform="translate(62 88)"><path class="tear tl" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tl d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>
+      <g transform="translate(108 88)"><path class="tear tr" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d2" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/><path class="tear tr d3" d="M0 -5 C3 0 4 3 0 6 C-4 3 -3 0 0 -5 Z"/></g>`,
   };
-  const LEGS = `
-    <rect x="44" y="136" width="82" height="14" rx="4" fill="${NAVY}"/>
-    <g class="leg leg-l"><rect x="46" y="146" width="37" height="58" rx="5" fill="${NAVY}"/><rect x="44" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>
-    <g class="leg leg-r"><rect x="87" y="146" width="37" height="58" rx="5" fill="${NAVY}"/><rect x="85" y="200" width="41" height="14" rx="5" fill="${INK}"/></g>`;
-  const BASE = `<ellipse class="fig-shadow" cx="85" cy="226" rx="58" ry="5"/><rect x="34" y="212" width="102" height="12" rx="4" fill="#3A4A70"/><rect x="34" y="212" width="102" height="4" rx="2" fill="#4D5E88"/>`;
-  const FIG_WALK = () => `
-    <svg class="fig fig-walk" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
-      <ellipse class="fig-shadow" cx="85" cy="222" rx="40" ry="5"/>
-      <g class="fig-body">${LEGS}${arm('l', 74)}${arm('r', 74)}${GI_TOP(74)}${head(FACE_READY, HAIR_UP)}</g>
-    </svg>`;
-  const FIG_WIN = () => `
-    <svg class="fig fig-win" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
-      <defs><radialGradient id="aura${++uid}"><stop offset=".35" stop-color="rgba(95,224,209,.55)"/><stop offset="1" stop-color="rgba(19,184,166,0)"/></radialGradient></defs>
-      <ellipse class="aura" cx="85" cy="100" rx="92" ry="128" fill="url(#aura${uid})"/>
-      ${BASE}
-      <g class="fig-body">${LEGS}${arm('l', 74)}${arm('r', 74)}${GI_TOP(74)}${head(FACE_WIN, HAIR_UP)}</g>
-      <g><rect x="140" y="194" width="30" height="20" rx="3" fill="${NAVY}" stroke="${GI}" stroke-width="2"/><rect x="136" y="214" width="38" height="5" rx="2.5" fill="${GI}"/><path d="M147 204 l4 4 l8 -9" stroke="#5FE0D1" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
-    </svg>`;
-  const FIG_LOSE = () => `
-    <svg class="fig fig-lose" viewBox="0 0 170 230" aria-hidden="true" focusable="false">
+  // Big head with ear discs, visor and the floating moon; dx turns the face (three-quarter view).
+  const head = (n, mood, { dx = 0, dy = 0 } = {}) => `
+    <g transform="translate(0 ${dy})"><g class="float">
+      <path d="M85 16 L85 2" stroke="#A7B3CB" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="2" r="3.5" fill="#A7B3CB"/>
+      <path class="moon" d="M85 -24 a9 9 0 1 0 8 13.5 a7 7 0 1 1 -8 -13.5 z" fill="${mood === 'sad' ? '#9BC9F0' : '#F6B94C'}" filter="url(#glow${n})"/>
+      <ellipse cx="${dx > 0 ? 22 : 20}" cy="70" rx="${dx > 0 ? 11 : 9}" ry="17" fill="#13B8A6"/><ellipse cx="${dx > 0 ? 21 : 19}" cy="70" rx="5" ry="9" fill="#0E8578"/>
+      ${dx > 0 ? '' : '<ellipse cx="150" cy="70" rx="9" ry="17" fill="#13B8A6"/><ellipse cx="151" cy="70" rx="5" ry="9" fill="#0E8578"/>'}
+      <rect x="22" y="14" width="126" height="112" rx="54" fill="url(#shell${n})"/>
+      <ellipse cx="58" cy="28" rx="24" ry="7" fill="#fff" opacity=".9" transform="rotate(-14 58 28)"/>
+      <rect x="${34 + dx}" y="34" width="102" height="80" rx="38" fill="url(#visor${n})"/>
+      <path d="M${46 + dx} 52 Q${52 + dx} 40 ${68 + dx} 39" stroke="#fff" stroke-width="4" opacity=".28" fill="none" stroke-linecap="round"/>
+      ${mood === 'happy' ? FACES.happy(n, dx) : FACES[mood](n)}
+    </g></g>`;
+  // Small round body with the chest screen (two dots dark, the third lit).
+  const body = (n, y = 0) => `
+    <rect x="50" y="${122 + y}" width="70" height="60" rx="28" fill="url(#shell${n})"/>
+    <ellipse cx="68" cy="${134 + y}" rx="10" ry="4" fill="#fff" opacity=".8"/>
+    <rect x="63" y="${140 + y}" width="44" height="22" rx="10" fill="#101A36"/>
+    <circle cx="94" cy="${151 + y}" r="3.4" fill="#33406A"/><circle cx="85" cy="${151 + y}" r="3.4" fill="#33406A"/><circle class="star" cx="76" cy="${151 + y}" r="3.8" fill="#5FE0D1" filter="url(#glow${n})"/>`;
+  const armFar = (n, y = 0) => `<g class="arm arm-r"><rect x="110" y="${130 + y}" width="15" height="32" rx="7.5" fill="url(#shellD${n})"/><circle cx="117.5" cy="${165 + y}" r="9" fill="#0E8578"/></g>`;
+  const armNear = (n, y = 0) => `<g class="arm arm-l"><rect x="45" y="${130 + y}" width="15" height="32" rx="7.5" fill="url(#shell${n})"/><circle cx="52.5" cy="${165 + y}" r="9" fill="#13B8A6"/></g>`;
+  const wheel = (n, cx, cy, far) => `
+    <g class="wheel">
+      <circle cx="${cx}" cy="${cy}" r="14" fill="${far ? '#16203C' : '#1C2848'}"/>
+      <circle cx="${cx}" cy="${cy}" r="9.5" fill="none" stroke="${far ? '#0E8578' : '#13B8A6'}" stroke-width="3"/>
+      <g class="spokes" style="transform-origin:${cx}px ${cy}px"><path d="M${cx - 8} ${cy} H${cx + 8} M${cx} ${cy - 8} V${cy + 8}" stroke="${far ? '#8E9DBA' : '#C3CDE0'}" stroke-width="2.4" stroke-linecap="round"/></g>
+      <circle cx="${cx}" cy="${cy}" r="3.6" fill="url(#shell${n})"/>
+    </g>`;
+  const legs = (n) => `<rect x="64" y="176" width="42" height="14" rx="7" fill="url(#shellD${n})"/>${wheel(n, 101, 201, true)}${wheel(n, 69, 201)}`;
+  const sparkles = `
+    <g class="sparkles">
+      <path class="spk s1" d="M18 40 l3 7 l7 3 l-7 3 l-3 7 l-3 -7 l-7 -3 l7 -3 z" fill="#F6B94C"/>
+      <path class="spk s2" d="M150 30 l2.4 5.6 l5.6 2.4 l-5.6 2.4 l-2.4 5.6 l-2.4 -5.6 l-5.6 -2.4 l5.6 -2.4 z" fill="#5FE0D1"/>
+      <path class="spk s3" d="M156 118 c-3 -6 -12 -3 -8 4 l8 8 l8 -8 c4 -7 -5 -10 -8 -4 z" fill="#FF8FA3"/>
+      <path class="spk s4" d="M12 120 c-2.4 -5 -10 -2.4 -6.4 3.2 l6.4 6.4 l6.4 -6.4 c3.6 -5.6 -4 -8.2 -6.4 -3.2 z" fill="#5FE0D1"/>
+    </g>`;
+  const FIG_WALK = () => { const n = ++uid; return `
+    <svg class="fig fig-walk" viewBox="0 0 170 230" aria-hidden="true" focusable="false">${DEFS(n)}
+      <ellipse class="fig-shadow" cx="85" cy="216" rx="40" ry="5"/>
+      <g class="fig-body">${armFar(n)}${legs(n)}${body(n)}${armNear(n)}${head(n, 'happy', { dx: 13 })}</g>
+    </svg>`; };
+  const FIG_WIN = () => { const n = ++uid; return `
+    <svg class="fig fig-win" viewBox="0 0 170 230" aria-hidden="true" focusable="false">${DEFS(n)}
+      <ellipse class="aura" cx="85" cy="100" rx="96" ry="124" fill="url(#aura${n})"/>
+      <ellipse class="fig-shadow" cx="85" cy="216" rx="42" ry="6"/>
+      ${sparkles}
+      <g class="spin"><g class="fig-body">${armFar(n)}${legs(n)}${body(n)}${armNear(n)}${head(n, 'win')}</g></g>
+    </svg>`; };
+  const FIG_LOSE = () => { const n = ++uid; return `
+    <svg class="fig fig-lose" viewBox="0 0 170 230" aria-hidden="true" focusable="false">${DEFS(n)}
       <g class="puddle"><ellipse cx="85" cy="212" rx="104" ry="15" fill="rgba(79,163,224,.45)"/><ellipse cx="85" cy="212" rx="104" ry="15" fill="none" stroke="rgba(124,196,242,.7)" stroke-width="2"/><ellipse cx="52" cy="208" rx="30" ry="3.5" fill="rgba(200,232,252,.55)"/><ellipse cx="128" cy="216" rx="16" ry="2.5" fill="rgba(200,232,252,.4)"/></g>
       <ellipse class="ripple" cx="85" cy="212" rx="40" ry="6"/>
       <ellipse class="ripple r2" cx="85" cy="212" rx="40" ry="6"/>
       <g class="fig-body">
-        ${arm('l', 104)}${arm('r', 104)}${GI_TOP(104)}
-        <rect x="46" y="176" width="37" height="18" rx="4" fill="${NAVY}"/><rect x="87" y="176" width="37" height="18" rx="4" fill="${NAVY}"/>
-        <rect x="40" y="190" width="45" height="18" rx="7" fill="${INK}"/><rect x="85" y="190" width="45" height="18" rx="7" fill="${INK}"/>
-        <g class="sob">${head(FACE_SAD, HAIR_DOWN, 30)}</g>
+        ${armFar(n, 12)}
+        ${wheel(n, 101, 201, true)}${wheel(n, 69, 201)}
+        ${body(n, 12)}${armNear(n, 12)}
+        <g class="sob">${head(n, 'sad', { dy: 12 })}</g>
       </g>
-      <g><rect x="134" y="184" width="32" height="21" rx="3" fill="${NAVY}" stroke="#F06A6A" stroke-width="2"/><rect x="129" y="205" width="42" height="5" rx="2.5" fill="#3A4A70"/><path d="M145 190 l10 10 M155 190 l-10 10" stroke="#F06A6A" stroke-width="3" stroke-linecap="round"/></g>
-    </svg>`;
+    </svg>`; };
   const endScene = (win) => {
     const wrap = document.createElement('div');
     wrap.className = `win ${win ? 'is-win' : 'is-lose'}`;
